@@ -153,7 +153,7 @@ fi
 cd $ROTDIR
 #BL2018
 # ocn and ice files
-    for targrp in ocn ice; do
+    for targrp in ocn ice SST; do
         htar -P -cvf $ATARDIR/$CDATE/${targrp}.tar `cat $ARCH_LIST/${targrp}.txt`
     done
 #BL2018
@@ -166,7 +166,7 @@ if [ $CDUMP = "gfs" ]; then
     done
 
     #for targrp in gfs_flux gfs_nemsio gfs_pgrb2b; do
-    for targrp in gfs_flux gfs_nemsioa gfs_nemsiob; do
+    for targrp in gfs_flux gfs_nemsioa gfs_nemsiob gfs_pgrb2b; do
         htar -P -cvf $ATARDIR/$CDATE/${targrp}.tar `cat $ARCH_LIST/${targrp}.txt`
         status=$?
         if [ $status -ne 0  -a $CDATE -ge $firstday ]; then

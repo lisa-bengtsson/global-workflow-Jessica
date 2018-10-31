@@ -47,6 +47,11 @@ export DATAROOT="$RUNDIR/$CDATE/$CDUMP/vrfy"
 [[ -d $DATAROOT ]] && rm -rf $DATAROOT
 mkdir -p $DATAROOT
 
+#BL2018
+### making ice plots ######
+    cd $COMIN
+### making ice plots ######
+#BL2018
 
 ###############################################################
 echo

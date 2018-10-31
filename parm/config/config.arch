@@ -9,12 +9,17 @@ echo "BEGIN: config.arch"
 . $EXPDIR/config.resources arch
 
 #--online archive of nemsio files for fit2obs verification
-export FITSARC="YES"
+#BL2018
+#export FITSARC="YES"
+export FITSARC="NO"
+#BL2018
 export FHMAX_FITS=132
 [[ "$FHMAX_FITS" -gt "$FHMAX_GFS" ]] && export FHMAX_FITS=$FHMAX_GFS
 
 #--starting and ending hours of previous cycles to be removed from rotating directory
-export RMOLDSTD=144
-export RMOLDEND=24
+#export RMOLDSTD=144
+#export RMOLDEND=24
+#BL2018
+export RMOLDEND=840
 
 echo "END: config.arch"

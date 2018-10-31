@@ -69,7 +69,9 @@ case $case_in in
         export layout_x=4
         export layout_y=8
         export npe_node_fcst=12
+        #export npe_node_fcst=24
         export nth_fv3=2
+        #export nth_fv3=1
         export cdmbgwd="1.0,1.2"  # mountain blocking and gravity wave drag
         export WRITE_GROUP=1
         export WRTTASK_PER_GROUP=24

@@ -30,51 +30,57 @@ if [ $type = "gfs" ]; then
   rm -f gfs_nemsioa.txt
   rm -f gfs_nemsiob.txt
   rm -f gfs_restarta.txt
-  rm -f ocn_ice.txt
+  rm -f ocn.txt
+  rm -f ice.txt
+  rm -f SST.txt
   touch gfsa.txt
   touch gfsb.txt
   touch gfs_pgrb2b.txt
   touch gfs_flux.txt
   touch gfs_nemsioa.txt
   touch gfs_nemsiob.txt
-  touch gfs_restarta.txt
-  touch ocn_ice.txt
+  #touch gfs_restarta.txt
+  touch ocn.txt
+  touch ice.txt
+  touch SST.txt
 
   dirname="./gfs.${PDY}/${cyc}/"
   head="gfs.t${cyc}z."
 
-# ocn and ice
+# BL2018, ocn and ice
   echo $cpl
   echo  "${dirname}ice*             " >>ice.txt
   echo  "${dirname}ocn*             " >>ocn.txt
+  echo  "${dirname}SST*             " >>SST.txt
+# BL2018, ocn and ice
   #..................
-  echo  "${dirname}${head}pgrb2b.0p25.anl                  " >>gfs_pgrb2b.txt
-  echo  "${dirname}${head}pgrb2b.0p25.anl.idx              " >>gfs_pgrb2b.txt
-  echo  "${dirname}${head}pgrb2b.0p50.anl                  " >>gfs_pgrb2b.txt
-  echo  "${dirname}${head}pgrb2b.0p50.anl.idx              " >>gfs_pgrb2b.txt
+#  echo  "${dirname}${head}pgrb2b.0p25.anl                  " >>gfs_pgrb2b.txt
+#  echo  "${dirname}${head}pgrb2b.0p25.anl.idx              " >>gfs_pgrb2b.txt
+#  echo  "${dirname}${head}pgrb2b.0p50.anl                  " >>gfs_pgrb2b.txt
+#  echo  "${dirname}${head}pgrb2b.0p50.anl.idx              " >>gfs_pgrb2b.txt
 
-  echo  "${dirname}${head}gsistat                          " >>gfsa.txt
-  echo  "${dirname}${head}nsstbufr                         " >>gfsa.txt
-  echo  "${dirname}${head}prepbufr                         " >>gfsa.txt
-  echo  "${dirname}${head}prepbufr_pre-qc                  " >>gfsa.txt
-  echo  "${dirname}${head}prepbufr.acft_profiles           " >>gfsa.txt
-  echo  "${dirname}${head}pgrb2.0p25.anl                   " >>gfsa.txt
-  echo  "${dirname}${head}pgrb2.0p25.anl.idx               " >>gfsa.txt
-  echo  "${dirname}avn.t${cyc}z.cyclone.trackatcfunix      " >>gfsa.txt
-  echo  "${dirname}gfso.t${cyc}z.cyclone.trackatcfunix     " >>gfsa.txt
-  echo  "${dirname}storms.gfso.atcf_gen.${PDY}${cyc}       " >>gfsa.txt
-  echo  "${dirname}storms.gfso.atcf_gen.altg.${PDY}${cyc}  " >>gfsa.txt
-  echo  "${dirname}trak.gfso.atcf_gen.${PDY}${cyc}         " >>gfsa.txt
-  echo  "${dirname}trak.gfso.atcf_gen.altg.${PDY}${cyc}    " >>gfsa.txt
-  echo  "${dirname}nawips/gfs_${PDY}${cyc}.sfc             " >>gfsa.txt
-  echo  "${dirname}nawips/gfs_${PDY}${cyc}.snd             " >>gfsa.txt
-  echo  "${dirname}bufr.t${cyc}z                           " >>gfsa.txt
+#  echo  "${dirname}${head}gsistat                          " >>gfsa.txt
+#  echo  "${dirname}${head}nsstbufr                         " >>gfsa.txt
+#  echo  "${dirname}${head}prepbufr                         " >>gfsa.txt
+#  echo  "${dirname}${head}prepbufr_pre-qc                  " >>gfsa.txt
+#  echo  "${dirname}${head}prepbufr.acft_profiles           " >>gfsa.txt
+#  echo  "${dirname}${head}pgrb2.0p25.anl                   " >>gfsa.txt
+#  echo  "${dirname}${head}pgrb2.0p25.anl.idx               " >>gfsa.txt
+#  echo  "${dirname}avn.t${cyc}z.cyclone.trackatcfunix      " >>gfsa.txt
+#  echo  "${dirname}gfso.t${cyc}z.cyclone.trackatcfunix     " >>gfsa.txt
+#  echo  "${dirname}storms.gfso.atcf_gen.${PDY}${cyc}       " >>gfsa.txt
+#  echo  "${dirname}storms.gfso.atcf_gen.altg.${PDY}${cyc}  " >>gfsa.txt
+#  echo  "${dirname}trak.gfso.atcf_gen.${PDY}${cyc}         " >>gfsa.txt
+#  echo  "${dirname}trak.gfso.atcf_gen.altg.${PDY}${cyc}    " >>gfsa.txt
+#  echo  "${dirname}nawips/gfs_${PDY}${cyc}.sfc             " >>gfsa.txt
+#  echo  "${dirname}nawips/gfs_${PDY}${cyc}.snd             " >>gfsa.txt
+#  echo  "${dirname}bufr.t${cyc}z                           " >>gfsa.txt
   echo  "./logs/${CDATE}/gfs*.log                          " >>gfsa.txt
 
-  echo  "${dirname}${head}pgrb2.0p50.anl                   " >>gfsb.txt
-  echo  "${dirname}${head}pgrb2.0p50.anl.idx               " >>gfsb.txt
-  echo  "${dirname}${head}pgrb2.1p00.anl                   " >>gfsb.txt
-  echo  "${dirname}${head}pgrb2.1p00.anl.idx               " >>gfsb.txt
+#  echo  "${dirname}${head}pgrb2.0p50.anl                   " >>gfsb.txt
+#  echo  "${dirname}${head}pgrb2.0p50.anl.idx               " >>gfsb.txt
+#  echo  "${dirname}${head}pgrb2.1p00.anl                   " >>gfsb.txt
+#  echo  "${dirname}${head}pgrb2.1p00.anl.idx               " >>gfsb.txt
 
 
   fh=0
@@ -82,8 +88,10 @@ if [ $type = "gfs" ]; then
     fhr=$(printf %03i $fh)
     echo  "${dirname}${head}pgrb2b.0p25.f${fhr}             " >>gfs_pgrb2b.txt
     echo  "${dirname}${head}pgrb2b.0p25.f${fhr}.idx         " >>gfs_pgrb2b.txt
-    echo  "${dirname}${head}pgrb2b.0p50.f${fhr}             " >>gfs_pgrb2b.txt
-    echo  "${dirname}${head}pgrb2b.0p50.f${fhr}.idx         " >>gfs_pgrb2b.txt
+#    echo  "${dirname}${head}pgrb2b.0p50.f${fhr}             " >>gfs_pgrb2b.txt
+#    echo  "${dirname}${head}pgrb2b.0p50.f${fhr}.idx         " >>gfs_pgrb2b.txt
+    echo  "${dirname}${head}pgrb2b.1p00.f${fhr}             " >>gfs_pgrb2b.txt
+    echo  "${dirname}${head}pgrb2b.1p00.f${fhr}.idx         " >>gfs_pgrb2b.txt
 
     echo  "${dirname}${head}sfluxgrbf${fhr}.grib2           " >>gfs_flux.txt
     echo  "${dirname}${head}sfluxgrbf${fhr}.grib2.idx       " >>gfs_flux.txt
@@ -92,8 +100,8 @@ if [ $type = "gfs" ]; then
     echo  "${dirname}${head}pgrb2.0p25.f${fhr}.idx          " >>gfsa.txt
     echo  "${dirname}${head}logf${fhr}.nemsio               " >>gfsa.txt
 
-    echo  "${dirname}${head}pgrb2.0p50.f${fhr}              " >>gfsb.txt
-    echo  "${dirname}${head}pgrb2.0p50.f${fhr}.idx          " >>gfsb.txt
+#    echo  "${dirname}${head}pgrb2.0p50.f${fhr}              " >>gfsb.txt
+#    echo  "${dirname}${head}pgrb2.0p50.f${fhr}.idx          " >>gfsb.txt
     echo  "${dirname}${head}pgrb2.1p00.f${fhr}              " >>gfsb.txt
     echo  "${dirname}${head}pgrb2.1p00.f${fhr}.idx          " >>gfsb.txt
 
@@ -124,12 +132,14 @@ if [ $type = "gfs" ]; then
   done
 
   #..................
-  echo  "${dirname}RESTART/${PDY}.${cyc}0000.sfcanl_data.tile1.nc  " >>gfs_restarta.txt
-  echo  "${dirname}RESTART/${PDY}.${cyc}0000.sfcanl_data.tile2.nc  " >>gfs_restarta.txt
-  echo  "${dirname}RESTART/${PDY}.${cyc}0000.sfcanl_data.tile3.nc  " >>gfs_restarta.txt
-  echo  "${dirname}RESTART/${PDY}.${cyc}0000.sfcanl_data.tile4.nc  " >>gfs_restarta.txt
-  echo  "${dirname}RESTART/${PDY}.${cyc}0000.sfcanl_data.tile5.nc  " >>gfs_restarta.txt
-  echo  "${dirname}RESTART/${PDY}.${cyc}0000.sfcanl_data.tile6.nc  " >>gfs_restarta.txt
+#BL2018
+#  echo  "${dirname}RESTART/${PDY}.${cyc}0000.sfcanl_data.tile1.nc  " >>gfs_restarta.txt
+#  echo  "${dirname}RESTART/${PDY}.${cyc}0000.sfcanl_data.tile2.nc  " >>gfs_restarta.txt
+#  echo  "${dirname}RESTART/${PDY}.${cyc}0000.sfcanl_data.tile3.nc  " >>gfs_restarta.txt
+#  echo  "${dirname}RESTART/${PDY}.${cyc}0000.sfcanl_data.tile4.nc  " >>gfs_restarta.txt
+#  echo  "${dirname}RESTART/${PDY}.${cyc}0000.sfcanl_data.tile5.nc  " >>gfs_restarta.txt
+#  echo  "${dirname}RESTART/${PDY}.${cyc}0000.sfcanl_data.tile6.nc  " >>gfs_restarta.txt
+#BL2018
 
 #-----------------------------------------------------
 fi   ##end of gfs

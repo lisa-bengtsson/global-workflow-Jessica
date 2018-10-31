@@ -147,6 +147,12 @@ postmsg "$jlogfile" "$msg"
 ##########################################
 # Remove the Temporary working directory
 ##########################################
+#BL2018
+cd $DATAROOT/fcst/history
+cat > run_is_done << EOF
+FV3_MOM6_CICE5 run is done
+EOF
+#BL2018
 cd $DATAROOT
 [[ $KEEPDATA = "NO" ]] && rm -rf $DATA
 

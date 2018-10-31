@@ -21,7 +21,8 @@ mkdir -p $DATA/MOM6_OUTPUT $DATA/MOM6_RESTART
 cd $DATA || exit 8
 
 # Copy CICE5 IC - pre-generated from CFSv2
-cp -p $ICSDIR/$CDATE/cice5_cfsv2/cice5_model_0.25.res_$CDATE.nc ./cice5_model.res_$CDATE.nc
+#cp -p $ICSDIR/$CDATE/cice5_cfsv2/cice5_model_0.25.res_$CDATE.nc ./cice5_model.res_$CDATE.nc
+cp -p $ICSDIR/$CDATE/cice5_model_0.25.res_$CDATE.nc ./cice5_model.res_$CDATE.nc
 
 # Copy CICE5 fixed files, and namelists
 cp -p $FIXcice/kmtu_cice_NEMS_mx025.nc .
@@ -29,8 +30,11 @@ cp -p $FIXcice/grid_cice_NEMS_mx025.nc .
 
 cd INPUT
 
-# Copy MOM6 ICs
-cp -p $ICSDIR/$CDATE/mom6_cfsv2/* .
+# Copy MOM6 ICs (from CFSv2 file)
+cp -p $ICSDIR/$CDATE/MOM6_IC_TS_2* MOM6_IC_TS.nc
+
+# Copy MOM6 ICs (from HYCOM file)
+#cp -p $ICSDIR/$CDATE/mom6_hycom/* MOM6_IC_TS.nc
 
 # Copy MOM6 fixed files
 cp -p $FIXmom/INPUT/* .
@@ -218,8 +222,11 @@ fi
 
 iceic=cice5_model.res_$CDATE.nc
 year=$(echo $CDATE|cut -c 1-4)
+#BL2018
 #stepsperhr=$((3600/$DELTIM))
-stepsperhr=${stepsperhr:-2}
+#stepsperhr=${stepsperhr:-2}
+stepsperhr=${stepsperhr:-4}
+#BL2018
 nhours=$($NHOUR $CDATE ${year}010100)
 steps=$((nhours*stepsperhr))
 npt=$((FHMAX*$stepsperhr))      # Need this in order for dump_last to work
@@ -241,24 +248,24 @@ cat > ice_in <<eof
   , use_leap_years = .true.
   , year_init      = $year
   , istep0         = $steps
-  , dt             = 1800.0
+  , dt             = 900.0
   , npt            = $npt
   , ndtd           = 1
-  , runtype        = '$runtyp' 
+  , runtype        = 'initial' 
   , ice_ic         = '$iceic'
   , restart        = .true.
   , restart_ext    = .false.
-  , use_restart_time = $restim
+  , use_restart_time = .false.
   , restart_format = 'nc'
   , lcdf64         = .false.
   , restart_dir    = './restart/'
   , restart_file   = 'iced'
   , pointer_file   = './restart/ice.restart_file'
-  , dumpfreq       = d
-  , dumpfreq_n     = 40
-  , dump_last      = .false.
+  , dumpfreq       = 'd'
+  , dumpfreq_n     =  40
+  , dump_last      = .false.  
   , diagfreq       = 6
-  , diag_type      = 'stdout'
+  , diag_type      = 'file'
   , diag_file      = 'ice_diag.d'
   , print_global   = .true.
   , print_points   = .true.
@@ -268,7 +275,7 @@ cat > ice_in <<eof
   , lonpnt(2)      = -45.
   , dbug           = .false.
   , histfreq       = 'm','d','h','x','x'
-  , histfreq_n     =  1 , 0 , 6,  1 , 1
+  , histfreq_n     =  0 , 0 , 6 , 1 , 1
   , hist_avg       = .true.
   , history_dir    = './history/'
   , history_file   = 'iceh'
@@ -300,7 +307,7 @@ cat > ice_in <<eof
 &tracer_nml
     tr_iage      = .true.
   , restart_age  = .false.
-  , tr_FY        = .false.
+  , tr_FY        = .true.
   , restart_FY   = .false.
   , tr_lvl       = .true.
   , restart_lvl  = .false.
@@ -317,7 +324,7 @@ cat > ice_in <<eof
 &thermo_nml
     kitd              = 1
   , ktherm            = 1
-  , conduct           = 'MU71'
+  , conduct           = 'bubbly'
   , a_rapid_mode      =  0.5e-3
   , Rac_rapid_mode    =    10.0
   , aspect_rapid_mode =     1.0
@@ -356,7 +363,7 @@ cat > ice_in <<eof
     hp1             = 0.01
   , hs0             = 0.
   , hs1             = 0.03
-  , dpscale         = 1.e-3
+  , dpscale         = 1.0e-3
   , frzpnd          = 'hlid'
   , snowinfil       = .true.
   , rfracmin        = 0.15
@@ -407,130 +414,137 @@ cat > ice_in <<eof
   , trestore        =  90
   , restore_ice     = .false.
 /
+
 &icefields_nml
-    f_tmask        = .true.
-  , f_tarea        = .true.
-  , f_uarea        = .true.
-  , f_dxt          = .false.
-  , f_dyt          = .false.
-  , f_dxu          = .false.
-  , f_dyu          = .false.
-  , f_HTN          = .false.
-  , f_HTE          = .false.
-  , f_ANGLE        = .true.
-  , f_ANGLET       = .true.
-  , f_NCAT         = .true.
-  , f_VGRDi        = .false.
-  , f_VGRDs        = .false.
-  , f_VGRDb        = .false.
-  , f_bounds       = .false.
-  , f_aice         = 'mdhxx' 
-  , f_hi           = 'mdhxx'
-  , f_hs           = 'mdhxx' 
-  , f_Tsfc         = 'mdhxx' 
-  , f_sice         = 'm' 
-  , f_uvel         = 'mdhxx' 
-  , f_vvel         = 'mdhxx' 
-  , f_fswdn        = 'mdhxx' 
-  , f_flwdn        = 'mdhxx'
-  , f_snow         = 'x' 
-  , f_snow_ai      = 'm' 
-  , f_rain         = 'x' 
-  , f_rain_ai      = 'm' 
-  , f_sst          = 'mdhxx' 
-  , f_sss          = 'mdhxx' 
-  , f_uocn         = 'm' 
-  , f_vocn         = 'm' 
-  , f_frzmlt       = 'mdhxx'
-  , f_fswfac       = 'm'
-  , f_fswabs       = 'x' 
-  , f_fswabs_ai    = 'm' 
-  , f_albsni       = 'mdhxx' 
-  , f_alvdr        = 'x'
-  , f_alidr        = 'x'
-  , f_albice       = 'x'
-  , f_albsno       = 'x'
-  , f_albpnd       = 'x'
-  , f_coszen       = 'x'
-  , f_flat         = 'x' 
-  , f_flat_ai      = 'm' 
-  , f_fsens        = 'x' 
-  , f_fsens_ai     = 'm' 
-  , f_flwup        = 'x' 
-  , f_flwup_ai     = 'm' 
-  , f_evap         = 'x' 
-  , f_evap_ai      = 'm' 
-  , f_Tair         = 'mdhxx' 
-  , f_Tref         = 'x' 
-  , f_Qref         = 'x'
-  , f_congel       = 'mdhxx' 
-  , f_frazil       = 'mdhxx' 
-  , f_snoice       = 'mdhxx' 
-  , f_dsnow        = 'x' 
-  , f_melts        = 'mdhxx'
-  , f_meltt        = 'mdhxx'
-  , f_meltb        = 'mdhxx'
-  , f_meltl        = 'mdhxx'
-  , f_fresh        = 'x'
-  , f_fresh_ai     = 'm'
-  , f_fsalt        = 'x'
-  , f_fsalt_ai     = 'm'
-  , f_fhocn        = 'x' 
-  , f_fhocn_ai     = 'm' 
-  , f_fswthru      = 'x' 
-  , f_fswthru_ai   = 'm' 
-  , f_fsurf_ai     = 'x'
-  , f_fcondtop_ai  = 'x'
-  , f_fmeltt_ai    = 'x' 
-  , f_strairx      = 'm' 
-  , f_strairy      = 'm' 
-  , f_strtltx      = 'x' 
-  , f_strtlty      = 'x' 
-  , f_strcorx      = 'x' 
-  , f_strcory      = 'x' 
-  , f_strocnx      = 'm' 
-  , f_strocny      = 'm' 
-  , f_strintx      = 'x' 
-  , f_strinty      = 'x'
-  , f_strength     = 'x'
-  , f_divu         = 'x'
-  , f_shear        = 'x'
-  , f_sig1         = 'x' 
-  , f_sig2         = 'x' 
-  , f_dvidtt       = 'x' 
-  , f_dvidtd       = 'x' 
-  , f_daidtt       = 'x'
-  , f_daidtd       = 'x' 
-  , f_mlt_onset    = 'm'
-  , f_frz_onset    = 'm'
-  , f_hisnap       = 'x'
-  , f_aisnap       = 'x'
-  , f_trsig        = 'm'
-  , f_icepresent   = 'm'
-  , f_iage         = 'm'
-  , f_FY           = 'x'
-  , f_aicen        = 'x'
-  , f_vicen        = 'x'
-  , f_Tinz         = 'x'
-  , f_Sinz         = 'x'
-  , f_Tsnz         = 'x'
-  , f_fsurfn_ai    = 'x'
-  , f_fcondtopn_ai = 'x'
-  , f_fmelttn_ai   = 'x'
-  , f_flatn_ai     = 'x'
+    f_tmask         = .true.
+  , f_tarea         = .true.
+  , f_uarea         = .true.
+  , f_dxt           = .false.
+  , f_dyt           = .false.
+  , f_dxu           = .false.
+  , f_dyu           = .false.
+  , f_HTN           = .false.
+  , f_HTE           = .false.
+  , f_ANGLE         = .true.
+  , f_ANGLET        = .true.
+  , f_NCAT          = .true.
+  , f_VGRDi         = .false.
+  , f_VGRDs         = .false.
+  , f_VGRDb         = .false.
+  , f_bounds        = .false.
+  , f_aice          = 'mdhxx' 
+  , f_hi            = 'mdhxx'
+  , f_hs            = 'mdhxx' 
+  , f_Tsfc          = 'mdhxx' 
+  , f_sice          = 'mdhxx' 
+  , f_uvel          = 'mdhxx' 
+  , f_vvel          = 'mdhxx' 
+  , f_fswdn         = 'mdhxx' 
+  , f_flwdn         = 'mdhxx'
+  , f_snow          = 'mdhxx' 
+  , f_snow_ai       = 'xxxxx' 
+  , f_rain          = 'mdhxx' 
+  , f_rain_ai       = 'xxxxx' 
+  , f_sst           = 'mdhxx' 
+  , f_sss           = 'mdhxx' 
+  , f_uocn          = 'mdhxx' 
+  , f_vocn          = 'mdhxx' 
+  , f_frzmlt        = 'mdhxx'
+  , f_fswfac        = 'mdhxx'
+  , f_fswabs        = 'mdhxx' 
+  , f_fswabs_ai     = 'xxxxx' 
+  , f_albsni        = 'mdhxx' 
+  , f_alvdr         = 'mdhxx'
+  , f_alidr         = 'mdhxx'
+  , f_albice        = 'mdhxx'
+  , f_albsno        = 'mdhxx'
+  , f_albpnd        = 'mdhxx'
+  , f_coszen        = 'mdhxx'
+  , f_flat          = 'mdhxx' 
+  , f_flat_ai       = 'xxxxx' 
+  , f_fsens         = 'mdhxx' 
+  , f_fsens_ai      = 'xxxxx' 
+  , f_flwup         = 'mdhxx' 
+  , f_flwup_ai      = 'xxxxx' 
+  , f_evap          = 'mdhxx' 
+  , f_evap_ai       = 'xxxxx' 
+  , f_Tair          = 'mdhxx' 
+  , f_Tref          = 'mdhxx' 
+  , f_Qref          = 'mdhxx'
+  , f_congel        = 'mdhxx' 
+  , f_frazil        = 'mdhxx' 
+  , f_snoice        = 'mdhxx' 
+  , f_dsnow         = 'mdhxx' 
+  , f_melts         = 'mdhxx'
+  , f_meltt         = 'mdhxx'
+  , f_meltb         = 'mdhxx'
+  , f_meltl         = 'mdhxx'
+  , f_fresh         = 'mdhxx'
+  , f_fresh_ai      = 'xxxxx'
+  , f_fsalt         = 'mdhxx'
+  , f_fsalt_ai      = 'xxxxx'
+  , f_fhocn         = 'mdhxx' 
+  , f_fhocn_ai      = 'xxxxx' 
+  , f_fswthru       = 'mdhxx' 
+  , f_fswthru_ai    = 'xxxxx' 
+  , f_fsurf_ai      = 'xxxxx'
+  , f_fcondtop_ai   = 'xxxxx'
+  , f_fmeltt_ai     = 'xxxxx' 
+  , f_strairx       = 'mdhxx' 
+  , f_strairy       = 'mdhxx' 
+  , f_strtltx       = 'mdhxx' 
+  , f_strtlty       = 'mdhxx' 
+  , f_strcorx       = 'mdhxx' 
+  , f_strcory       = 'mdhxx' 
+  , f_strocnx       = 'mdhxx' 
+  , f_strocny       = 'mdhxx' 
+  , f_strintx       = 'mdhxx' 
+  , f_strinty       = 'mdhxx'
+  , f_strength      = 'mdhxx'
+  , f_divu          = 'mdhxx'
+  , f_shear         = 'mdhxx'
+  , f_sig1          = 'x' 
+  , f_sig2          = 'x' 
+  , f_dvidtt        = 'mdhxx' 
+  , f_dvidtd        = 'mdhxx' 
+  , f_daidtt        = 'mdhxx'
+  , f_daidtd        = 'mdhxx' 
+  , f_mlt_onset     = 'mdhxx'
+  , f_frz_onset     = 'mdhxx'
+  , f_hisnap        = 'mdhxx'
+  , f_aisnap        = 'mdhxx'
+  , f_trsig         = 'mdhxx'
+  , f_icepresent    = 'mdhxx'
+  , f_iage          = 'mdhxx'
+  , f_FY            = 'mdhxx'
+  , f_aicen         = 'xxxxx'
+  , f_vicen         = 'xxxxx'
+  , f_Tinz          = 'x'
+  , f_Sinz          = 'x'
+  , f_Tsnz          = 'x'
+  , f_fsurfn_ai     = 'xxxxx'
+  , f_fcondtopn_ai  = 'xxxxx'
+  , f_fmelttn_ai    = 'xxxxx'
+  , f_flatn_ai      = 'xxxxx'
+  , f_s11           = 'mdhxx'
+  , f_s12           = 'mdhxx'
+  , f_s22           = 'mdhxx'
+  , f_yieldstress11 = 'mdhxx'
+  , f_yieldstress12 = 'mdhxx'
+  , f_yieldstress22 = 'mdhxx'
 /
 
 &icefields_mechred_nml
-    f_alvl         = 'm'
-  , f_vlvl         = 'm'
-  , f_ardg         = 'm'
-  , f_vrdg         = 'm'
+    f_alvl         = 'mdhxx'
+  , f_vlvl         = 'mdhxx'
+  , f_ardg         = 'mdhxx'
+  , f_vrdg         = 'mdhxx'
   , f_dardg1dt     = 'x'
   , f_dardg2dt     = 'x'
   , f_dvirdgdt     = 'x'
-  , f_opening      = 'x'
-  , f_ardgn        = 'x'
-  , f_vrdgn        = 'x'
+  , f_opening      = 'mdhxx'
+  , f_ardgn        = 'xxxxx'
+  , f_vrdgn        = 'xxxxx'
   , f_dardg1ndt    = 'x'
   , f_dardg2ndt    = 'x'
   , f_dvirdgndt    = 'x'
@@ -543,17 +557,17 @@ cat > ice_in <<eof
 /
 
 &icefields_pond_nml
-    f_apondn       = 'x'
-  , f_apeffn       = 'x'
-  , f_hpondn       = 'x'
+    f_apondn       = 'xxxxx'
+  , f_apeffn       = 'xxxxx'
+  , f_hpondn       = 'xxxxx'
   , f_apond        = 'mdhxx'
   , f_hpond        = 'mdhxx'
   , f_ipond        = 'mdhxx'
   , f_apeff        = 'mdhxx'
-  , f_apond_ai     = 'm'
-  , f_hpond_ai     = 'm'
-  , f_ipond_ai     = 'm'
-  , f_apeff_ai     = 'm'
+  , f_apond_ai     = 'xxxxx'
+  , f_hpond_ai     = 'xxxxx'
+  , f_ipond_ai     = 'xxxxx'
+  , f_apeff_ai     = 'xxxxx'
 /
 
 &icefields_bgc_nml
@@ -583,16 +597,16 @@ cat > ice_in <<eof
   , f_bgc_DMSP_ml  = 'x'
   , f_bTin         = 'x'
   , f_bphi         = 'x' 
-  , f_fbri         = 'm'    
-  , f_hbri         = 'm'
+  , f_fbri         = 'x'    
+  , f_hbri         = 'x'
   , f_grownet      = 'x'
   , f_PPnet        = 'x'
 /
 
 &icefields_drag_nml
-    f_drag         = 'x'
-  , f_Cdn_atm      = 'x'
-  , f_Cdn_ocn      = 'x'
+    f_drag         = 'mdhxx'
+  , f_Cdn_atm      = 'mdhxx'
+  , f_Cdn_ocn      = 'mdhxx'
 /
 eof
 

@@ -188,5 +188,6 @@ for fhr in $fhrlst; do
     [[ $status -ne 0 ]] && exit $status
   fi
 done
-rm -Rf $DATA
+    $NCP -p SST*nc $COMOUT/
+#rm -Rf $DATA
 exit 0

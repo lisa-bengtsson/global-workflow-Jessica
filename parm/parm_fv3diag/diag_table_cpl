@@ -8,6 +8,7 @@
 "fv3_history2d",  0,  "hours",  1,  "hours",  "time"
 ######################
 "ocn%4yr%2mo%2dy%2hr",      6,  "hours", 1, "hours", "time", 6, "hours", "1901 1 1 0 0 0"
+"SST%4yr%2mo%2dy",      1,  "days",  1, "days",  "time", 1, "days",  "1901 1 1 0 0 0"
 ##############################################
 # static fields
  "ocean_model", "geolon",      "geolon",      "ocn%4yr%2mo%2dy%2hr", "all", .false., "none", 2
@@ -23,6 +24,8 @@
  "ocean_model", "wet_c",       "wet_c",       "ocn%4yr%2mo%2dy%2hr", "all", .false., "none", 2
  "ocean_model", "wet_u",       "wet_u",       "ocn%4yr%2mo%2dy%2hr", "all", .false., "none", 2
  "ocean_model", "wet_v",       "wet_v",       "ocn%4yr%2mo%2dy%2hr", "all", .false., "none", 2
+ "ocean_model", "sinrot",      "sinrot",      "ocn%4yr%2mo%2dy%2hr", "all", .false., "none", 2
+ "ocean_model", "cosrot",      "cosrot",      "ocn%4yr%2mo%2dy%2hr", "all", .false., "none", 2
 
 # ocean output TSUV and others
  "ocean_model", "SSH",   "SSH",   "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
@@ -31,6 +34,10 @@
  "ocean_model", "speed", "speed", "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
  "ocean_model", "SSU",   "SSU",   "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
  "ocean_model", "SSV",   "SSV",   "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
+ "ocean_model", "frazil", "frazil", "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
+ "ocean_model","ePBL_h_ML","mld", "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
+# save daily SST
+ "ocean_model", "SST",   "sst",   "SST%4yr%2mo%2dy","all",.true.,"none",2
 
 # Z-Space Fields Provided for CMIP6 (CMOR Names):
 #===============================================
@@ -42,7 +49,7 @@
 # forcing
  "ocean_model","taux","taux",                            "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
  "ocean_model","tauy","tauy",                            "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
- "ocean_model","ePBL_h_ML","mld",                        "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
+# "ocean_model","ePBL_h_ML","mld",                        "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
  "ocean_model", "latent",      "latent",                     "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
  "ocean_model", "sensible",      "sensible",                     "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
  "ocean_model", "SW",        "SW",                       "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2

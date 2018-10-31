@@ -16,7 +16,6 @@ if [ $machine = "THEIA" ]; then
 
     export ACCOUNT="marine-cpu"
     export QUEUE="batch"
-    #export QUEUE="debug"
     export QUEUE_ARCH="service"
 
 elif [ $machine = "WCOSS_C" -o $machine = "WCOSS_DELL_P3" ]; then
@@ -86,7 +85,7 @@ if [ $machine = "THEIA" ]; then
 
     # USER specific paths
     export HOMEDIR="/scratch4/NCEPDEV/nems/save/$USER"
-    export STMP="/scratch4/NCEPDEV/stmp3/$USER"
+    export STMP="/scratch4/NCEPDEV/stmp4/$USER"
     export PTMP="/scratch4/NCEPDEV/stmp4/$USER"
     export NOSCRUB="/scratch4/NCEPDEV/nems/noscrub/$USER"
 
@@ -188,7 +187,7 @@ export ROTDIR="@ROTDIR@/$PSLOT"
 export RUNDIR="$STMP/RUNDIRS/$PSLOT"
 export ARCDIR="$NOSCRUB/archive/$PSLOT"
 export ICSDIR="@ICSDIR@"
-export ATARDIR="/NCEPDEV/$HPSS_PROJECT/5year/$USER/$machine/scratch/$PSLOT"
+export ATARDIR="/NCEPDEV/$HPSS_PROJECT/5year/$USER/$machine/benchmark1/$PSLOT"
 
 # For coupled
 #export UGCSICSDIR="$NOSCRUB/UGCS/ugcsics_cfsv2op"
@@ -236,7 +235,7 @@ export FHMAX=840
 export FHMAX_GFS_00=840
 export FHMAX_GFS=840
 export FHMAX_GFS_06=840
-export FHMAX_GFS_12=840
+export FHMAX_GFS_840=840
 export FHMAX_GFS_18=840
 export FHMAX_GFS=$(eval echo \${FHMAX_GFS_$cyc})
 
@@ -245,7 +244,8 @@ export FHMAX_GFS=$(eval echo \${FHMAX_GFS_$cyc})
 export FHOUT_GFS=6
 #BL2018
 export FHMAX_HF_GFS=0
-export FHOUT_HF_GFS=1
+#export FHOUT_HF_GFS=1
+export FHOUT_HF_GFS=-1
 
 # Output for coldstart only 1 hour
 export FHMAX_COLD=1
