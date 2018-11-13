@@ -8,9 +8,9 @@ module load hpss
 
 CWD=`pwd`
 # $IDATE is the initial start date of your run (first cycle CDATE, YYYYMMDDCC)
-IDATE=2017070100
+IDATE=2016010100
 # $EDATE is the ending date of your run (YYYYMMDDCC) and is the last cycle that will complete
-EDATE=2017070100
+EDATE=2016010100
 YMD=`echo $IDATE | cut -c1-8`
 HH=`echo $IDATE | cut -c9-10`
 FROM_HPSS=/scratch4/NCEPDEV/nems/noscrub/Bin.Li/FROM_HPSS
@@ -19,16 +19,17 @@ FV3DATA=$FROM_HPSS/$IDATE/gfs/C384/INPUT
 # ./setup_expt_fcstonly.py --pslot $PSLOT --configdir $CONFIGDIR --idate $IDATE --edate $EDATE --res $RES --gfs_cyc $GFS_CYC --comrot $COMROT --expdir $EXPDIR
 
 # $PSLOT is the name of your experiment
-PSLOT=c384
+PSLOT=cTest
 
 # $COMROT is the path to your experiment output directory. DO NOT include PSLOT folder at end of path, it’ll be built for you.
 #COMROT=/scratch4/NCEPDEV/nems/noscrub/Patrick.Tripp/COMFV3
-COMROT=/scratch4/NCEPDEV/nems/noscrub/Bin.Li/benchmark/${YMD}/COMFV3
+COMROT=/scratch4/NCEPDEV/nems/noscrub/${USER}/benchmark/${YMD}/COMFV3
 mkdir -p $COMROT
 
 # $CONFIGDIR is the path to the /config folder under the copy of the system you're using (i.e. ../parm/config/)
 #CONFIGDIR=/scratch4/NCEPDEV/nems/noscrub/Patrick.Tripp/new.fv3gfs/parm/config
-CONFIGDIR=/scratch4/NCEPDEV/stmp4/Bin.Li/fv3gfs3_benchmark/parm/config
+#CONFIGDIR=/scratch4/NCEPDEV/stmp4/Bin.Li/fv3gfs3_benchmark/parm/config
+CONFIGDIR=/scratch3/NCEPDEV/stmp2/Jessica.Meixner/fv3gfs3_benchmark_3/parm/config
 
 # do not export ICSDIR, causes error in py script
 #BL2018
@@ -60,7 +61,7 @@ GFS_CYC=1
 # $EXPDIR is the path to your experiment directory where your configs will be placed and where you will find your workflow monitoring files (i.e. rocoto database and xml file). DO NOT include PSLOT folder at end of path, it will be built for you.
 
 #EXPDIR=/scratch4/NCEPDEV/nems/noscrub/Patrick.Tripp/EXPFV3
-EXPDIR=/scratch4/NCEPDEV/nems/noscrub/Bin.Li/benchmark/${YMD}/EXPFV3
+EXPDIR=/scratch4/NCEPDEV/nems/noscrub/${USER}/benchmark/${YMD}/EXPFV3
 mkdir -p $EXPDIR
 
 ./setup_expt_fcstonly.py --pslot $PSLOT --configdir $CONFIGDIR --idate $IDATE --edate $EDATE --res $RES --gfs_cyc $GFS_CYC --comrot $COMROT --expdir $EXPDIR
