@@ -21,10 +21,11 @@ FV3DATA=$FROM_HPSS/$IDATE/gfs/C384/INPUT
 # ./setup_expt_fcstonly.py --pslot $PSLOT --configdir $CONFIGDIR --idate $IDATE --edate $EDATE --res $RES --gfs_cyc $GFS_CYC --comrot $COMROT --expdir $EXPDIR
 
 # $PSLOT is the name of your experiment
-PSLOT=cTest
+PSLOT=c384
 
 # $COMROT is the path to your experiment output directory. DO NOT include PSLOT folder at end of path, it’ll be built for you.
 #COMROT=/scratch4/NCEPDEV/nems/noscrub/Patrick.Tripp/COMFV3
+#COMROT=/scratch4/NCEPDEV/nems/noscrub/Bin.Li/benchmark/COMFV3
 COMROT=/scratch4/NCEPDEV/nems/noscrub/${USER}/benchmark/${YMD}/COMFV3
 mkdir -p $COMROT
 
@@ -52,8 +53,6 @@ ln -s $FROM_HPSS/* ../FV3ICS
 
 cd $CWD
 
-# $IDATE is the initial start date of your run (first cycle CDATE, YYYYMMDDCC)
-# $EDATE is the ending date of your run (YYYYMMDDCC) and is the last cycle that will complete
 # $RES is the resolution of the forecast (i.e. 768 for C768)
 RES=384
 
