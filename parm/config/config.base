@@ -85,7 +85,7 @@ if [ $machine = "THEIA" ]; then
 
     # USER specific paths
     export HOMEDIR="/scratch4/NCEPDEV/nems/save/$USER"
-    export STMP="/scratch4/NCEPDEV/stmp4/$USER"
+    export STMP="/scratch3/NCEPDEV/stmp1/$USER"
     export PTMP="/scratch4/NCEPDEV/stmp4/$USER"
     export NOSCRUB="/scratch4/NCEPDEV/nems/noscrub/$USER"
 

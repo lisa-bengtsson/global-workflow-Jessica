@@ -167,6 +167,7 @@ if [ $CDUMP = "gfs" ]; then
 
     #for targrp in gfs_flux gfs_nemsio gfs_pgrb2b; do
     for targrp in gfs_flux gfs_nemsioa gfs_nemsiob gfs_pgrb2b; do
+    #for targrp in gfs_flux gfs_nemsioa gfs_nemsiob gfs_pgrb2b gfs_nemsio_c; do
         htar -P -cvf $ATARDIR/$CDATE/${targrp}.tar `cat $ARCH_LIST/${targrp}.txt`
         status=$?
         if [ $status -ne 0  -a $CDATE -ge $firstday ]; then
@@ -287,6 +288,8 @@ if [ $CDUMP = "gfs" ]; then
     COMIN="$VFYARC/$CDUMP.$gPDY"
     [[ -d $COMIN ]] && rm -rf $COMIN
 fi
-
+ls $RUNDIR/$CDATE
+rm -rf  $RUNDIR/$CDATE
+rm -rf  $ROTDIR
 ###############################################################
 exit 0

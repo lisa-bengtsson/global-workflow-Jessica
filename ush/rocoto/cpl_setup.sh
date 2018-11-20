@@ -8,9 +8,11 @@ module load hpss
 
 CWD=`pwd`
 # $IDATE is the initial start date of your run (first cycle CDATE, YYYYMMDDCC)
+#IDATE=$1
 IDATE=2016010100
 # $EDATE is the ending date of your run (YYYYMMDDCC) and is the last cycle that will complete
-EDATE=2016010100
+#EDATE=2016010100
+EDATE=$IDATE
 YMD=`echo $IDATE | cut -c1-8`
 HH=`echo $IDATE | cut -c9-10`
 FROM_HPSS=/scratch4/NCEPDEV/nems/noscrub/Bin.Li/FROM_HPSS
