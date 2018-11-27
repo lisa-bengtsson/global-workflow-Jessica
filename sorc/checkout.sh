@@ -7,9 +7,10 @@ echo $topdir
 echo fv3gfs coupled checkout ...
 if [[ ! -d fv3gfs.fd ]] ; then
     rm -f ${topdir}/checkout-fv3gfs.log
-    git clone --recursive gerrit:EMC_FV3-MOM6-CICE5 fv3gfs.fd >> ${topdir}/checkout-fv3gfs.log 2>&1
+    #git clone --recursive gerrit:EMC_FV3-MOM6-CICE5 fv3gfs.fd >> ${topdir}/checkout-fv3gfs.log 2>&1
+    git clone gerrit:EMC_MOM6-WW3 fv3gfs.fd >> ${topdir}/checkout-fv3gfs.log 2>&1
     cd fv3gfs.fd
-    git checkout v2.0.0
+    git checkout --track origin/tag_v2_plus_waves
     git submodule update --init --recursive
     cd ${topdir}
 else
