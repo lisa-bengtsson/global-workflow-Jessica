@@ -152,8 +152,8 @@ fi
 
 cd $ROTDIR
 #BL2018
-# ocn and ice files
-    for targrp in ocn ice SST; do
+# ocn and ice files and wave
+    for targrp in ocn ice SST ww3; do
         htar -P -cvf $ATARDIR/$CDATE/${targrp}.tar `cat $ARCH_LIST/${targrp}.txt`
     done
 #BL2018

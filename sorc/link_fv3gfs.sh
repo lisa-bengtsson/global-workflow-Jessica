@@ -38,7 +38,8 @@ elif [ $machine = "theia" ]; then
     # For now it is here. Move to emc-nemspara after testing.
 #    CPLFIX_DIR="/scratch4/NCEPDEV/nems/noscrub/Patrick.Tripp/FIXFV3CPL"
 #    CPLFIX_DIR="/scratch4/NCEPDEV/nems/save/Bin.Li/FIXFV3CPL"
-    CPLFIX_DIR="/scratch4/NCEPDEV/nems/save/Bin.Li/fix_prep_benchmark"
+#    CPLFIX_DIR="/scratch4/NCEPDEV/nems/save/Bin.Li/fix_prep_benchmark"
+    CPLFIX_DIR="/scratch4/NCEPDEV/nems/noscrub/Jessica.Meixner/fix_prep_benchmark"
 fi
 cd ${pwd}/../fix                ||exit 8
 for dir in fix_am fix_fv3 fix_orog fix_fv3_gmted2010 ; do
@@ -56,6 +57,7 @@ $LINK $CPLFIX_DIR/fix_ocnice   .
 $LINK $CPLFIX_DIR/fix_cice5    .
 $LINK $CPLFIX_DIR/fix_mom6     .
 $LINK $CPLFIX_DIR/fix_fv3grid  .
+$LINK $CPLFIX_DIR/fix_ww3      .
 
 #--add gfs_post file
 cd ${pwd}/../jobs               ||exit 8

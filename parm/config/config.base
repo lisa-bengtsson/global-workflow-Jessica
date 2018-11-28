@@ -42,6 +42,7 @@ export SCRgfs=$HOMEgfs/scripts
 export FIXcice=$HOMEgfs/fix/fix_cice5
 export FIXmom=$HOMEgfs/fix/fix_mom6
 export FIXgrid=$HOMEgfs/fix/fix_fv3grid
+export FIXww3=$HOMEgfs/fix/fix_ww3
 # For coupled ocnpost
 export OCNFIXDIR=$HOMEgfs/fix/fix_ocnice
 
@@ -148,6 +149,7 @@ export REALTIME="NO"
 # Coupled model options
 export cplflx=".T."
 export cpl=".true."
+export cplwav=".T."
 
 ####################################################
 # DO NOT ADD MACHINE DEPENDENT STUFF BELOW THIS LINE
@@ -187,7 +189,7 @@ export ROTDIR="@ROTDIR@/$PSLOT"
 export RUNDIR="$STMP/RUNDIRS/$PSLOT"
 export ARCDIR="$NOSCRUB/archive/$PSLOT"
 export ICSDIR="@ICSDIR@"
-export ATARDIR="/NCEPDEV/$HPSS_PROJECT/5year/$USER/$machine/benchmark1/$PSLOT"
+export ATARDIR="/NCEPDEV/$HPSS_PROJECT/5year/$USER/$machine/benchmark1a/$PSLOT"
 
 # For coupled
 #export UGCSICSDIR="$NOSCRUB/UGCS/ugcsics_cfsv2op"

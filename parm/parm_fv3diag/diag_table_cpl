@@ -38,6 +38,14 @@
  "ocean_model","ePBL_h_ML","mld", "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
 # save daily SST
  "ocean_model", "SST",   "sst",   "SST%4yr%2mo%2dy","all",.true.,"none",2
+ "ocean_model", "surface_stokes_y", "surface_stokes_y", "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
+ "ocean_model", "surface_stokes_x", "surface_stokes_x", "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
+ "ocean_model", "MLD_003",          "MLD_003",          "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
+ "ocean_model", "LA",           "LA",           "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
+ "ocean_model", "LA_MOD",           "LA_MOD",           "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
+ "ocean_model", "MSTAR",            "MSTAR",            "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
+ "ocean_model", "MSTAR_LT",         "MSTAR_LT",         "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
+ "ocean_model", "LT_Enhancement",    "LT_Enhancement",         "ocn%4yr%2mo%2dy%2hr","all",.true.,"none",2
 
 # Z-Space Fields Provided for CMIP6 (CMOR Names):
 #===============================================

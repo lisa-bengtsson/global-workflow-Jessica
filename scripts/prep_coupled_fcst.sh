@@ -12,6 +12,8 @@ inistep=$1   # cold warm restart
 DATA=${DATA:-$pwd/fv3tmp$$}    # temporary running directory
 ROTDIR=${ROTDIR:-$pwd}         # rotating archive directory
 ICSDIR=${ICSDIR:-$pwd}         # cold start initial conditions
+#WW3ICDIR=${WW3ICDIR:-/scratch3/NCEPDEV/stmp2/Jessica.Meixner/Data/restarts}
+WW3ICDIR=/scratch3/NCEPDEV/stmp2/Jessica.Meixner/Data/restarts
 
 if [ ! -d $ROTDIR ]; then mkdir -p $ROTDIR; fi
 if [ ! -d $DATA ]; then mkdir -p $DATA ;fi
@@ -23,6 +25,11 @@ cd $DATA || exit 8
 # Copy CICE5 IC - pre-generated from CFSv2
 #cp -p $ICSDIR/$CDATE/cice5_cfsv2/cice5_model_0.25.res_$CDATE.nc ./cice5_model.res_$CDATE.nc
 cp -p $ICSDIR/$CDATE/cice5_model_0.25.res_$CDATE.nc ./cice5_model.res_$CDATE.nc
+
+
+# Copy WW3 mod_defs and restarts 
+cp -p $WW3ICDIR/multi_1.glo_30m.${CDATE}.restart restart.glo_30m
+cp -p $FIXww3/mod_def.* .
 
 # Copy CICE5 fixed files, and namelists
 cp -p $FIXcice/kmtu_cice_NEMS_mx025.nc .
@@ -93,6 +100,7 @@ elif [ $CASE = "C384" ] ; then
   ATM_petlist_bounds=${ATM_petlist_bounds:-'0 311'}    #6*8*6+wrtgrps(24)
   OCN_petlist_bounds=${OCN_petlist_bounds:-'312 431'}  #120
   ICE_petlist_bounds=${ICE_petlist_bounds:-'432 455'}  #24
+  WAV_petlist_bounds=${WAV_petlist_bounds:-'456 527'}  #72
 
   # This is 6x12 layout * 6 = 432 + 72 # didn't work
   #MED_petlist_bounds=${MED_petlist_bounds:-'0 503'}
@@ -150,6 +158,14 @@ ICE_attributes::
   Verbosity = 0
   DumpFields = $DumpFields
 ::
+
+# WAV #
+WAV_model:                      ww3
+WAV_petlist_bounds:             $WAV_petlist_bounds
+WAV_attributes::
+  Verbosity = 0
+  DumpFields = $DumpFields
+::
 eof
 
 
@@ -174,6 +190,11 @@ runSeq::
     @
     MED MedPhase_prep_ocn
     MED -> OCN :remapMethod=redist
+    ATM -> WAV
+    OCN -> WAV
+    ICE -> WAV
+    WAV -> OCN :srcMaskValues=1
+    WAV 
     OCN
     OCN -> MED :remapMethod=redist
   @
@@ -188,7 +209,12 @@ runSeq::
   @1800.0
     MED MedPhase_prep_ocn
     MED -> OCN :remapMethod=redist
+    ATM -> WAV
+    OCN -> WAV
+    ICE -> WAV
+    WAV -> OCN :srcMaskValues=1
     OCN
+    WAV
     @1800.0
       MED MedPhase_prep_ice
       MED MedPhase_prep_atm
@@ -609,6 +635,40 @@ cat > ice_in <<eof
   , f_Cdn_ocn      = 'mdhxx'
 /
 eof
+
+
+WW3start1=$(echo $CDATE | cut -c1-8)
+WW3start2=$(echo $CDATE | cut -c9-10)
+WW3start=$(echo ${WW3start1} ${WW3start2}0000)
+
+#NDATE=${NDATE:-"/nwprod2/prod_util.v1.0.15/exec/ndate"}
+#NDATE=/scratch3/NCEPDEV/nwprod/util/exec/ndate
+NDATE=/scratch3/NCEPDEV/nwprod/util/exec/ndate
+WW3endtz=`$NDATE +$FHMAX ${CDATE}`
+WW3end1=$(echo $WW3endtz | cut -c1-8)
+WW3end2=$(echo $WW3endtz | cut -c9-10)
+WW3end=$(echo $WW3end1 ${WW3end2}0000)
+WW3restart=$WW3end
+echo "JDM WW3DATES" $WW3start "end" $WW3end 
+export WW3DIR=${FIXww3:-"/marine/noscrub/Jessica.Meixner/WW3FIXFORMOM6"}
+
+#create input files from templates:
+${NCP} $WW3DIR/wave_glo_30m.buoys buoy.loc
+${NCP} $WW3DIR/ww3_multi.inp.tmpl ww3_multi.inp.tmpl
+sed -e "s/RUN_BEG/$WW3start/g" \
+    -e "s/RUN_END/$WW3end/g" \
+    -e "s/OUT_BEG/$WW3start/g" \
+    -e "s/OUT_END/$WW3end/g" \
+    -e "s/DTFLD/ 3600/g" \
+    -e "s/DTPNT/ 3600/g" \
+    -e "/BUOY_FILE/r buoy.loc" \
+    -e "s/BUOY_FILE/DUMMY/g" \
+    -e "s/RST_BEG/$WW3restart/g" \
+    -e "s/DTRST/ 0/g" \
+    -e "s/RST_END/$WW3restart/g" \
+                            $DATA/ww3_multi.inp.tmpl | \
+sed -n "/DUMMY/!p"               > $DATA/ww3_multi.inp
+
 
 #rtype=${rtype:-"n"}
 

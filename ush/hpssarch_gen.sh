@@ -33,6 +33,7 @@ if [ $type = "gfs" ]; then
   rm -f ocn.txt
   rm -f ice.txt
   rm -f SST.txt
+  rm -f ww3.txt 
   touch gfsa.txt
   touch gfsb.txt
   touch gfs_pgrb2b.txt
@@ -43,6 +44,7 @@ if [ $type = "gfs" ]; then
   touch ocn.txt
   touch ice.txt
   touch SST.txt
+  touch ww3.txt 
 
   dirname="./gfs.${PDY}/${cyc}/"
   head="gfs.t${cyc}z."
@@ -52,6 +54,8 @@ if [ $type = "gfs" ]; then
   echo  "${dirname}ice*             " >>ice.txt
   echo  "${dirname}ocn*             " >>ocn.txt
   echo  "${dirname}SST*             " >>SST.txt
+  echo  "${dirname}*ww3*            " >>ww3.txt
+  echo  "${dirname}*glo_30m*        " >>ww3.txt
 # BL2018, ocn and ice
   #..................
 #  echo  "${dirname}${head}pgrb2b.0p25.anl                  " >>gfs_pgrb2b.txt

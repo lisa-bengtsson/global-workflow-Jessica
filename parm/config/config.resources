@@ -43,6 +43,7 @@ elif [ $step = "fcst" ]; then
     export npe_fcst=$(echo "$layout_x * $layout_y * 6" | bc)
     export npe_ocn=120
     export npe_ice=24
+    export npe_wav=72
     export npe_node_fcst=${npe_node_fcst:-12}
     export nth_fcst=2
     if [[ "$machine" == "WCOSS_C" ]]; then
