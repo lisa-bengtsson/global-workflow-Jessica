@@ -289,7 +289,7 @@ if [ $CDUMP = "gfs" ]; then
     [[ -d $COMIN ]] && rm -rf $COMIN
 fi
 ls $RUNDIR/$CDATE
-rm -rf  $RUNDIR/$CDATE
-rm -rf  $ROTDIR
+#rm -rf  $RUNDIR/$CDATE
+#rm -rf  $ROTDIR
 ###############################################################
 exit 0

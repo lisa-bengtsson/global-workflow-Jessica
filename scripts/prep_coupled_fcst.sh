@@ -13,8 +13,8 @@ DATA=${DATA:-$pwd/fv3tmp$$}    # temporary running directory
 ROTDIR=${ROTDIR:-$pwd}         # rotating archive directory
 ICSDIR=${ICSDIR:-$pwd}         # cold start initial conditions
 #WW3ICDIR=${WW3ICDIR:-/scratch3/NCEPDEV/stmp2/Jessica.Meixner/Data/restarts}
-WW3ICDIR=/scratch3/NCEPDEV/stmp2/Jessica.Meixner/Data/restarts
-
+#WW3ICDIR=/scratch3/NCEPDEV/stmp2/Jessica.Meixner/Data/restarts
+WW3ICDIR=/scratch3/NCEPDEV/stmp2/Jessica.Meixner/EMC_ww3_ICfromOps/work/OUT
 if [ ! -d $ROTDIR ]; then mkdir -p $ROTDIR; fi
 if [ ! -d $DATA ]; then mkdir -p $DATA ;fi
 mkdir -p $DATA/RESTART $DATA/INPUT
@@ -28,7 +28,8 @@ cp -p $ICSDIR/$CDATE/cice5_model_0.25.res_$CDATE.nc ./cice5_model.res_$CDATE.nc
 
 
 # Copy WW3 mod_defs and restarts 
-cp -p $WW3ICDIR/multi_1.glo_30m.${CDATE}.restart restart.glo_30m
+#cp -p $WW3ICDIR/multi_1.glo_30m.${CDATE}.restart restart.glo_30m
+cp -p $WW3ICDIR/restart.${CDATE}.glo_30m restart.glo_30m
 cp -p $FIXww3/mod_def.* .
 
 # Copy CICE5 fixed files, and namelists
@@ -118,7 +119,7 @@ cat > nems.configure <<eof
 #############################################
 
 # EARTH #
-EARTH_component_list: MED ATM OCN ICE
+EARTH_component_list: MED ATM OCN ICE WAV
 EARTH_attributes::
   Verbosity = 0
 ::
@@ -644,7 +645,7 @@ WW3start=$(echo ${WW3start1} ${WW3start2}0000)
 #NDATE=${NDATE:-"/nwprod2/prod_util.v1.0.15/exec/ndate"}
 #NDATE=/scratch3/NCEPDEV/nwprod/util/exec/ndate
 NDATE=/scratch3/NCEPDEV/nwprod/util/exec/ndate
-WW3endtz=`$NDATE +$FHMAX ${CDATE}`
+WW3endtz=`$NDATE +840 ${CDATE}`
 WW3end1=$(echo $WW3endtz | cut -c1-8)
 WW3end2=$(echo $WW3endtz | cut -c9-10)
 WW3end=$(echo $WW3end1 ${WW3end2}0000)

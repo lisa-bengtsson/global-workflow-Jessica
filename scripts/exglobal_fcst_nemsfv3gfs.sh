@@ -974,6 +974,9 @@ if [ $SEND = "YES" ]; then
 
 fi
 
+mkdir -p /scratch4/NCEPDEV/nems/noscrub/Jessica.Meixner/WW3OUTPUT/$CDATE 
+cp *glo_30m /scratch4/NCEPDEV/nems/noscrub/Jessica.Meixner/WW3OUTPUT/$CDATE/
+
 #------------------------------------------------------------------
 # Clean up before leaving
 if [ $KEEPDATA = "NO" ]; then rm -rf $DATA; fi
