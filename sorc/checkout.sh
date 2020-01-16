@@ -14,8 +14,9 @@ echo fv3_mom6_cice5 checkout ...
 rm -f ${topdir}/checkout-fv3_coupled.log
 
 if [[ ! -d fv3_coupled.fd ]] ; then
-    git clone https://github.com/ufs-community/ufs-s2s-model fv3_coupled.fd >> ${topdir}/checkout-fv3_coupled.log 2>&1
+    git clone https://github.com/JessicaMeixner-NOAA/ufs-s2s-model fv3_coupled.fd >> ${topdir}/checkout-fv3_coupled.log 2>&1
     cd fv3_coupled.fd
+    cd bugfix/ficeminmax
     git submodule update --init --recursive
     cd ${topdir}
 else
