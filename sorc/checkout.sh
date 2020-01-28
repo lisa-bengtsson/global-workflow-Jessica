@@ -23,7 +23,7 @@ if [[ ! -d fv3gfs.fd ]] ; then
 
 # plan C: use FV3-V0606 pplus bug fixing (gflux=0 and mask ?), results are b4b identical to plan B
 #     git checkout --track origin/bm3fv30606bf
-      git checkout v3.0.3
+#      git checkout v3.0.3
 # plan D: use ESRL bug fixing code based on fv3-V0606
 #    git checkout --track origin/bm3fv30606bf_PlanD
 
