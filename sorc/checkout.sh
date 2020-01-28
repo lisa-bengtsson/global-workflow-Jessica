@@ -10,8 +10,10 @@ if [[ ! -d fv3gfs.fd ]] ; then
 #    git clone --recursive gerrit:EMC_FV3-MOM6-CICE5 fv3gfs.fd >> ${topdir}/checkout-fv3gfs.log 2>&1
 #   remove recursive based on kate hotfix https://vlab.ncep.noaa.gov/redmine/issues/67072
 
-    git clone gerrit:EMC_FV3-MOM6-CICE5 fv3gfs.fd >> ${topdir}/checkout-fv3gfs.log 2>&1
-    cd fv3gfs.fd
+#    git clone gerrit:EMC_FV3-MOM6-CICE5 fv3gfs.fd >> ${topdir}/checkout-fv3gfs.log 2>&1
+   git clone https://github.com/ufs-community/ufs-s2s-model fv3gfs.fd >> ${topdir}/checkout-fv3gfs.log 2>&1 
+   cd fv3gfs.fd
+   git checkout 0eec05469defe6d9f637ceea537fab1a7a165364
 
 # plan A use all top of master for each component
 #     git checkout --track origin/bugfix/fv3atmcplflx
@@ -46,10 +48,12 @@ fi
 echo EMC_post checkout ...
 if [[ ! -d gfs_post.fd ]] ; then
     rm -f ${topdir}/checkout-gfs_post.log
-    git clone --recursive gerrit:EMC_post gfs_post.fd >> ${topdir}/checkout-gfs_post.log 2>&1
+#    git clone --recursive gerrit:EMC_post gfs_post.fd >> ${topdir}/checkout-gfs_post.log 2>&1
+    git clone https://github.com/jiandewang/EMC_post gfs_post.fd >> ${topdir}/checkout-gfs_post.log 2>&1
     cd gfs_post.fd
 #    git checkout ncep_post.v8.0.16
-    git checkout ncep_post.v8.0.16-wcossP2
+#    git checkout ncep_post.v8.0.16-wcossP2
+    git checkout EMC_post-P2
     cd ${topdir}
 else
     echo 'Skip.  Directory gfs_post.fd already exists.'
