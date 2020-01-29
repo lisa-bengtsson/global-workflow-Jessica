@@ -41,7 +41,9 @@ cp -p $ICSDIR/$CDATE/mom6_da/MOM*nc .
 # Copy MOM6 fixed files
 cp -p $FIXmom/INPUT/* .
 #JW use updated MOM_input (WIND_STAGGER=A, no more MIN_Z_DIAG_INTERVAL and Z_OUTPUT_GRID_FILE)
-cp -p $FIXmom/INPUT/MOM_input_update MOM_input
+#cp -p $FIXmom/INPUT/MOM_input_update MOM_input
+#JW add runoff option
+cp -p $FIXmom/INPUT/MOM_input_update_runoff MOM_input
 
 # Copy grid_spec and mosaic files
 cp -pf $FIXgrid/$CASE/* .
