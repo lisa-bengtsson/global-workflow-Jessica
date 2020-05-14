@@ -7,25 +7,13 @@ echo $topdir
 echo fv3gfs coupled checkout ...
 if [[ ! -d fv3gfs.fd ]] ; then
     rm -f ${topdir}/checkout-fv3gfs.log
-#    git clone --recursive gerrit:EMC_FV3-MOM6-CICE5 fv3gfs.fd >> ${topdir}/checkout-fv3gfs.log 2>&1
-#   remove recursive based on kate hotfix https://vlab.ncep.noaa.gov/redmine/issues/67072
-
-#    git clone gerrit:EMC_FV3-MOM6-CICE5 fv3gfs.fd >> ${topdir}/checkout-fv3gfs.log 2>&1
-   git clone https://github.com/ufs-community/ufs-s2s-model fv3gfs.fd >> ${topdir}/checkout-fv3gfs.log 2>&1 
+   
+   git clone https://github.com/JessicaMeixner-NOAA/ufs-s2s-model.git >> ${topdir}/checkout-fv3gfs.log 2>&1
    cd fv3gfs.fd
-   git checkout 0eec05469defe6d9f637ceea537fab1a7a165364
+   git checkout ed290b9163ca8ee2c1f7aad9fe030ba6958e3de2 
+   #wcossphase2 branch 
+   #prototype 4 tag + wcoss porting updates
 
-# plan A use all top of master for each component
-#     git checkout --track origin/bugfix/fv3atmcplflx
-
-# plan B    use FV3-V0606 (note: Partha's run used branch UFS-FV3-V0606-CPC-ice-pre-BM3, not this one)
-#     git checkout update_fv3_0606_b3
-
-# plan C: use FV3-V0606 pplus bug fixing (gflux=0 and mask ?), results are b4b identical to plan B
-#     git checkout --track origin/bm3fv30606bf
-#      git checkout v3.0.3
-# plan D: use ESRL bug fixing code based on fv3-V0606
-#    git checkout --track origin/bm3fv30606bf_PlanD
 
     git submodule update --init --recursive
     cd ${topdir}
