@@ -31,9 +31,13 @@ if [ $type = "gfs" ]; then
   rm -f gfs_nemsioa.txt
   rm -f gfs_nemsiob.txt
   rm -f gfs_restarta.txt
-  rm -f ocn.txt
+  rm -f ocn_2D.txt
+  rm -f ocn_3D.txt
+  rm -f ocn_xsect.txt
+  rm -f log.txt
   rm -f ice.txt
-  rm -f SST.txt
+  rm -f ocn_daily.txt
+  rm -f wavocn.txt
   touch gfsa.txt
   touch gfsb.txt
   touch gfs_pgrb2b.txt
@@ -41,9 +45,7 @@ if [ $type = "gfs" ]; then
   touch gfs_nemsioa.txt
   touch gfs_nemsiob.txt
   #touch gfs_restarta.txt
-  touch ocn.txt
-  touch ice.txt
-  touch SST.txt
+  touch ocn_2D.txt ocn_3D.txt ocn_xsect.txt ocn_daily.txt log.txt ice.txt
 
   dirname="./gfs.${PDY}/${cyc}/"
   head="gfs.t${cyc}z."
@@ -51,11 +53,14 @@ if [ $type = "gfs" ]; then
 # BL2018, ocn and ice
   echo $cpl
   echo  "${dirname}ice*             " >>ice.txt
-  echo  "${dirname}ocn*             " >>ocn.txt
-  echo  "${dirname}SST*             " >>SST.txt
-  echo  "${dirname}input.nml        " >>SST.txt
-  echo  "${dirname}ice_in           " >>SST.txt
-  echo  "${dirname}MOM_input        " >>SST.txt
+  echo  "${dirname}ocn_2D*          " >>ocn_2D.txt
+  echo  "${dirname}ocn_3D*          " >>ocn_3D.txt
+  echo  "${dirname}ocn*EQ*          " >>ocn_xsect.txt
+  echo  "${dirname}ocn_daily*       " >>ocn_daily.txt
+  echo  "${dirname}wavocn*          " >>wavocn.txt
+  echo  "${dirname}input.nml        " >>log.txt
+  echo  "${dirname}ice_in           " >>log.txt
+  echo  "${dirname}MOM_input        " >>log.txt
 # BL2018, ocn and ice
   #..................
 #  echo  "${dirname}${head}pgrb2b.0p25.anl                  " >>gfs_pgrb2b.txt

@@ -33,6 +33,7 @@ status=$?
 
 
 ##############################################
+y
 # Obtain unique process id (pid) and make temp directory
 ##############################################
 export job=${job:-"ocnpost"}
@@ -182,13 +183,25 @@ for fhr in $fhrlst; do
 
     export ocnfile=ocn_${year}_${month}_${day}_${hh}.nc
 
-    echo "cp -p $ocnfile $COMOUT/ocn$p_date.$ENSMEM.$IDATE.nc"
-    $NCP -p $ocnfile $COMOUT/ocn$p_date.$ENSMEM.$IDATE.nc
+    echo "cp -p ${ocnfile} $COMOUT/ocn_$p_date.$ENSMEM.$IDATE.nc"
+    $NCP -p ${ocnfile} $COMOUT/ocn_$p_date.$ENSMEM.$IDATE.nc
+    status=$?
+    [[ $status -ne 0 ]] && exit $status
+    $ncks -x -v vo,uo,so,temp $COMOUT/ocn_$p_date.$ENSMEM.$IDATE.nc $COMOUT/ocn_2D_$p_date.$ENSMEM.$IDATE.nc
+#    $ncks -v vo,uo,so,temp $COMOUT/ocn_$p_date.$ENSMEM.$IDATE.nc $COMOUT/ocn_3D_$p_date.$ENSMEM.$IDATE.nc
+    $ncks -x -v Heat_PmE,LW,LwLatSens,MLD_003,MLD_0125,SSH,SSS,SST,SSU,SSV,SW,cos_rot,ePBL,evap,fprec,frazil,latent,lprec,lrunoff,sensible,sin_rot,speed,taux,tauy,wet_c,wet_u,wet_v $COMOUT/ocn_$p_date.$ENSMEM.$IDATE.nc $COMOUT/ocn_3D_$p_date.$ENSMEM.$IDATE.nc
+    $ncks -v temp -d yh,503 -d xh,-299.92,60.03 $COMOUT/ocn_3D_$p_date.$ENSMEM.$IDATE.nc $COMOUT/ocn-temp-EQ_$p_date.$ENSMEM.$IDATE.nc
+    $ncks -v uo -d yh,503 -d xh,-299.92,60.03 $COMOUT/ocn_3D_$p_date.$ENSMEM.$IDATE.nc $COMOUT/ocn-uo-EQ_$p_date.$ENSMEM.$IDATE.nc
+#    echo `date`
+#    echo "starting zipping ocean files, this will take long time ....."
+#    gzip $COMOUT/ocn-2D_$p_date.$ENSMEM.$IDATE.nc $COMOUT/ocn-3D_$p_date.$ENSMEM.$IDATE.nc
+#    echo "zipping done!"
+#    echo `date`
     status=$?
     [[ $status -ne 0 ]] && exit $status
   fi
 done
-    $NCP -p SST*nc $COMOUT/
+    $NCP -p ocn_daily*nc $COMOUT/
     $NCP -p input.nml $COMOUT/
     $NCP -p ice_in $COMOUT/
     $NCP -p INPUT/MOM_input $COMOUT/

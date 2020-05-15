@@ -178,6 +178,7 @@ if [ $machine = "WCOSS" ]; then
     export COPYGB2="/nwprod/util/exec/copygb2"
     export GRBINDEX="/nwprod/util/exec/grbindex"
     export GRB2INDEX="/nwprod/util/exec/grb2index"
+    export ncks="/usrx/local/nco/4.4.4/bin/ncks"
 
 fi
 

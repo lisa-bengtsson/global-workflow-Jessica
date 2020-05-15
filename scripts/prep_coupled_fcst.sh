@@ -25,6 +25,7 @@ cd $DATA || exit 8
 # JW cp -p $ICSDIR/$CDATE/mom6_da/cice5_model_0.25.res_$CDATE.nc ./cice5_model.res_$CDATE.nc
 # cp -p $ICSDIR/$CDATE/cice5_model_0.25.res_$CDATE.nc ./cice5_model.res_$CDATE.nc  #CFSv2 ice IC
 cp -p $ICSDIR/$CDATE/cpc/cice5_model_0.25.res_$CDATE.nc ./cice5_model.res_$CDATE.nc  #CPC ice IC
+cp /global/noscrub/Jiande.Wang/WF3/fix_prep_benchmark3/ccpp_suites/suite_FV3_GFS_v15p2_coupled.xml .
 
 # Copy CICE5 fixed files, and namelists
 cp -p $FIXcice/kmtu_cice_NEMS_mx025.nc .

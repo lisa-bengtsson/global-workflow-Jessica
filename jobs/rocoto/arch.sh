@@ -153,8 +153,14 @@ fi
 cd $ROTDIR
 #BL2018
 # ocn and ice files
-    for targrp in ocn ice SST; do
-        htar -P -cvf $ATARDIR/$CDATE/${targrp}.tar `cat $ARCH_LIST/${targrp}.txt`
+    echo "current location is $ROTDIR"
+    echo `date`
+    echo "starting gzip netcdf files, this will take a while ......"
+    gzip $COMIN/ocn_2D*nc $COMIN/ocn_3D*nc $COMIN/ice*nc $COMIN/ocn_daily*nc
+    echo `date`
+    echo "gzip done !"
+    for targrp in ocn_2D ocn_3D ocn_xsect ice ocn_daily log; do
+        htar -P -cvf $ATARDIR/$CDATE/${targrp}_c384.tar `cat $ARCH_LIST/${targrp}.txt`
     done
 #BL2018
 
@@ -166,7 +172,8 @@ if [ $CDUMP = "gfs" ]; then
     done
 
     #for targrp in gfs_flux gfs_nemsio gfs_pgrb2b; do
-    for targrp in gfs_flux gfs_nemsioa gfs_nemsiob gfs_pgrb2b; do
+#    for targrp in gfs_flux gfs_nemsioa gfs_nemsiob gfs_pgrb2b; do
+    for targrp in gfs_nemsioa gfs_nemsiob gfs_pgrb2b; do
     #for targrp in gfs_flux gfs_nemsioa gfs_nemsiob gfs_pgrb2b gfs_nemsio_c; do
         htar -P -cvf $ATARDIR/$CDATE/${targrp}.tar `cat $ARCH_LIST/${targrp}.txt`
         status=$?
@@ -175,6 +182,9 @@ if [ $CDUMP = "gfs" ]; then
             exit $status
         fi
     done
+
+        htar -P -cvf $ATARDIR/$CDATE/gfs_flux_c384.tar `cat $ARCH_LIST/gfs_flux.txt`
+
 #BL2019
     for targrp in gfs_flux_1p00; do
         htar -P -cvf $ATARDIR/$CDATE/${targrp}.tar `cat $ARCH_LIST/${targrp}.txt`

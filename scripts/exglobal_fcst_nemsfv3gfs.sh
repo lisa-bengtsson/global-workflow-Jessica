@@ -726,6 +726,7 @@ cat > input.nml <<EOF
   fhmaxhf = $FHMAX_HF
   fhouthf = $FHOUT_HF
   $atmos_model_nml
+  ccpp_suite = 'FV3_GFS_v15p2_coupled'
 /
 
 &diag_manager_nml
@@ -846,6 +847,8 @@ cat > input.nml <<EOF
 
 &gfs_physics_nml
   fhzero       = $FHZER
+  oz_phys      = .false.
+  oz_phys_2015 = .true.
   h2o_phys     = ${h2o_phys:-".true."}
   ldiag3d      = ${ldiag3d:-".false."}
   fhcyc        = $FHCYC
