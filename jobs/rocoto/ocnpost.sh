@@ -201,6 +201,7 @@ for fhr in $fhrlst; do
     [[ $status -ne 0 ]] && exit $status
   fi
 done
+    $NCP -p wavocn*nc $COMOUT/
     $NCP -p ocn_daily*nc $COMOUT/
     $NCP -p input.nml $COMOUT/
     $NCP -p ice_in $COMOUT/

@@ -156,10 +156,10 @@ cd $ROTDIR
     echo "current location is $ROTDIR"
     echo `date`
     echo "starting gzip netcdf files, this will take a while ......"
-    gzip $COMIN/ocn_2D*nc $COMIN/ocn_3D*nc $COMIN/ice*nc $COMIN/ocn_daily*nc
+    gzip $COMIN/ocn_2D*nc $COMIN/ocn_3D*nc $COMIN/ice*nc $COMIN/ocn_daily*nc COMIN/wavocn*nc
     echo `date`
     echo "gzip done !"
-    for targrp in ocn_2D ocn_3D ocn_xsect ice ocn_daily log; do
+    for targrp in ocn_2D ocn_3D ocn_xsect ice ocn_daily log wavocn; do
         htar -P -cvf $ATARDIR/$CDATE/${targrp}_c384.tar `cat $ARCH_LIST/${targrp}.txt`
     done
 #BL2018
