@@ -1,9 +1,9 @@
-h1. How to run workflow on wcoss phase 2 
+How to run workflow on wcoss phase 2 
 
 1. code checkout and system build:
-git clone --recursive gerrit:global-workflow fv3gfs_benchmark-P2
-cd fv3gfs_benchmark-P2
-git checkout fv3_mom6_cice5_wcossP2
+git clone https://github.com/JessicaMeixner-NOAA/global-workflow global-workflow-ufsp4
+cd global-workflow-ufsp4
+git checkout ufs_s2s_p4_wcossphase2
 git submodule update --init --recursive
 cd sorc
 sh checkout.sh
