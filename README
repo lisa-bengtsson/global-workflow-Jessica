@@ -7,7 +7,7 @@ git checkout ufs_s2s_p4_wcossphase2
 git submodule update --init --recursive
 cd sorc
 sh checkout.sh
-sh build_all.sh
+sh build_all.sh  #there is no clean before building ufs-s2s-model, clean manually if needed 
 sh link_fv3gfs.sh emc wcoss
 
 2. configuration:

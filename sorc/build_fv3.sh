@@ -28,6 +28,7 @@ cd fv3gfs.fd/
 
 # This builds the coupled model - app version
 # Not a 32-bit build, may need to change later for bit-reproducibility checks
-./NEMS/NEMSAppBuilder rebuild app=coupledFV3_CCPP_MOM6_CICE_WW3
-cd ./NEMS/exe
+cd NEMS 
+make app=coupledFV3_CCPP_MOM6_CICE_WW3 build
+cd exe
 mv NEMS.x nems_fv3_mom6_cice5.x
