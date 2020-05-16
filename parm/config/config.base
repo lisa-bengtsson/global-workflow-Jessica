@@ -26,7 +26,7 @@ elif [ $machine = "WCOSS_C" -o $machine = "WCOSS_DELL_P3" ]; then
     export QUEUE_ARCH="dev_transfer"
 
 elif [ $machine = "WCOSS" ]; then
-    export ACCOUNT="CFS-T2O"
+    export ACCOUNT="GFS-T2O"
     export QUEUE="dev2"
     export QUEUE_ARCH="transfer"
 
@@ -231,11 +231,11 @@ export PSLOT="@PSLOT@"
 export EXPDIR="@EXPDIR@/$PSLOT"
 export ROTDIR="@ROTDIR@/$PSLOT"
 #export RUNDIR="$STMP/RUNDIRS/$PSLOT"
-export RUNDIR="/stmpd2/Jiande.Wang/RUNDIRS/$PSLOT"
+export RUNDIR="/stmpd2/$USER/p4base/RUNDIRS/$PSLOT"
 export ARCDIR="$NOSCRUB/archive/$PSLOT"
 export ICSDIR="@ICSDIR@"
 #export ATARDIR="/NCEPDEV/$HPSS_PROJECT/5year/$USER/$machine/scratch/benchmark2/$PSLOT"
-export ATARDIR="/NCEPDEV/$HPSS_PROJECT/5year/$USER/$machine/scratch/pre-BM3/$PSLOT"
+export ATARDIR="/NCEPDEV/$HPSS_PROJECT/5year/$USER/$machine/scratch/UFSp4_base/$PSLOT"
 
 # For coupled
 #export UGCSICSDIR="$NOSCRUB/UGCS/ugcsics_cfsv2op"
