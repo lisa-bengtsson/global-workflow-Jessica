@@ -25,7 +25,10 @@ cd $DATA || exit 8
 # JW cp -p $ICSDIR/$CDATE/mom6_da/cice5_model_0.25.res_$CDATE.nc ./cice5_model.res_$CDATE.nc
 # cp -p $ICSDIR/$CDATE/cice5_model_0.25.res_$CDATE.nc ./cice5_model.res_$CDATE.nc  #CFSv2 ice IC
 cp -p $ICSDIR/$CDATE/cpc/cice5_model_0.25.res_$CDATE.nc ./cice5_model.res_$CDATE.nc  #CPC ice IC
-cp /global/noscrub/Jiande.Wang/WF3/fix_prep_benchmark3/ccpp_suites/suite_FV3_GFS_v15p2_coupled.xml .
+#cp /global/noscrub/Jiande.Wang/WF3/fix_prep_benchmark3/ccpp_suites/suite_FV3_GFS_v15p2_coupled.xml .
+cp $HOMEgfs/sorc/fv3gfs.fd/FV3/ccpp/suites/suite_FV3_GFS_v15p2_coupled.xml .
+
+
 
 # Copy CICE5 fixed files, and namelists
 cp -p $FIXcice/kmtu_cice_NEMS_mx025.nc .
@@ -40,11 +43,15 @@ cp -p $ICSDIR/$CDATE/mom6_da/MOM*nc .
 #cp -p $ICSDIR/$CDATE/mom6_hycom/* MOM6_IC_TS.nc
 
 # Copy MOM6 fixed files
-cp -p $FIXmom/INPUT/* .
+cp -p $FIXmom/025/* .
+cp -p $HOMEgfs/fix/fix_cpl/aC384o025/grid_spec.nc . 
 #JW use updated MOM_input (WIND_STAGGER=A, no more MIN_Z_DIAG_INTERVAL and Z_OUTPUT_GRID_FILE)
 #cp -p $FIXmom/INPUT/MOM_input_update MOM_input
 #JW add runoff option
-cp -p $FIXmom/INPUT/MOM_input_update_runoff MOM_input
+#cp -p $FIXmom/INPUT/MOM_input_update_runoff MOM_input
+cp -p $HOMEgfs/parm/parm_mom6/MOM_input_runoff MOM_input 
+#for wave ocean coupling: 
+#cp -p $HOMEgfs/parm/parm_mom6/MOM_input_wav MOM_input
 
 # Copy grid_spec and mosaic files
 cp -pf $FIXgrid/$CASE/* .

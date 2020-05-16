@@ -34,10 +34,12 @@ if [ $machine == "cray" ]; then
 elif [ $machine = "dell" ]; then
     FIX_DIR="/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix"
 elif [ $machine = "wcoss" ]; then   #JW
-    FIX_DIR="/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix"
-#    CPLFIX_DIR="/global/noscrub/Jiande.Wang/WF/fix_prep_benchmark"  #JW
-#    CPLFIX_DIR="/gpfs/gd1/emc/global/noscrub/Jiande.Wang/WF3/fix_prep_benchmark3"
-     CPLFIX_DIR="/gpfs/td1/emc/global/noscrub/Jiande.Wang/WF3/fix_prep_benchmark3"
+    #FIX_DIR="/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix"
+    #CPLFIX_DIR="/gpfs/td1/emc/global/noscrub/Jiande.Wang/WF3/fix_prep_benchmark3"
+    #UFS_p4: 
+    FIX_DIR="/marine/noscrub/Jessica.Meixner/FIX/fix_UFSp4"
+    CPLFIX_DIR="/marine/noscrub/Jessica.Meixner/FIX/fix_UFSp4"
+
 elif [ $machine = "theia" ]; then
     FIX_DIR="/scratch4/NCEPDEV/global/save/glopara/git/fv3gfs/fix"
    
@@ -61,6 +63,7 @@ $LINK $CPLFIX_DIR/fix_ocnice   .
 $LINK $CPLFIX_DIR/fix_cice5    .
 $LINK $CPLFIX_DIR/fix_mom6     .
 $LINK $CPLFIX_DIR/fix_fv3grid  .
+$LINK $CPLFIX_DIR/fix_cpl      .
 
 #--add gfs_post file
 cd ${pwd}/../jobs               ||exit 8
