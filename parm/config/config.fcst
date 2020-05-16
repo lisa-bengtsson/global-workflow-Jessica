@@ -208,7 +208,7 @@ elif [[ "$CDUMP" == "gfs" ]] ; then # GFS cycle specific parameters
     fi
 
     if [ $cpl = ".true." ] ; then
-        export DIAG_TABLE="$HOMEgfs/parm/parm_fv3diag/diag_table_cplwav"
+        export DIAG_TABLE="$HOMEgfs/parm/parm_fv3diag/diag_table_cpl"
     fi
 fi
 
