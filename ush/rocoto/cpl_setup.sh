@@ -9,7 +9,7 @@ module load hpss
 CWD=`pwd`
 # $IDATE is the initial start date of your run (first cycle CDATE, YYYYMMDDCC)
 #IDATE=$1
-IDATE=2012040100
+IDATE=2012070100
 # $EDATE is the ending date of your run (YYYYMMDDCC) and is the last cycle that will complete
 #EDATE=2016010100
 EDATE=$IDATE
@@ -25,12 +25,12 @@ PSLOT=c384
 
 # $COMROT is the path to your experiment output directory. DO NOT include PSLOT folder at end of path, it’ll be built for you.
 #COMROT=/scratch4/NCEPDEV/nems/noscrub/${USER}/benchmark2/${YMD}/COMFV3
-COMROT=/stmpd2/Jiande.Wang/pre-BM3/COMFV3/${IDATE}
+COMROT=/stmpd2/Jessica.Meixner/p4base/COMFV3/${IDATE}
 mkdir -p $COMROT
 
 # $CONFIGDIR is the path to the /config folder under the copy of the system you're using (i.e. ../parm/config/)
 #CONFIGDIR=/scratch4/NCEPDEV/nems/noscrub/Patrick.Tripp/new.fv3gfs/parm/config
-CONFIGDIR=/global/noscrub/Jiande.Wang/WF3/UFS-FV3-V0606-CPC-ice-pre-BM3/parm/config
+CONFIGDIR=/marine/noscrub/Jessica.Meixner/global-workflow/parm/config
 
 # do not export ICSDIR, causes error in py script
 #BL2018
@@ -60,7 +60,7 @@ GFS_CYC=1
 # $EXPDIR is the path to your experiment directory where your configs will be placed and where you will find your workflow monitoring files (i.e. rocoto database and xml file). DO NOT include PSLOT folder at end of path, it will be built for you.
 
 #EXPDIR=/scratch4/NCEPDEV/nems/noscrub/${USER}/benchmark2/${YMD}/EXPFV3
-EXPDIR=/stmpd2/Jiande.Wang/pre-BM3/EXPFV3/${IDATE}
+EXPDIR=/stmpd2/Jessica.Meixner/p4base/EXPFV3/${IDATE}
 mkdir -p $EXPDIR
 
 ./setup_expt_fcstonly.py --pslot $PSLOT --configdir $CONFIGDIR --idate $IDATE --edate $EDATE --res $RES --gfs_cyc $GFS_CYC --comrot $COMROT --expdir $EXPDIR

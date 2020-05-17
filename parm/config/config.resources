@@ -41,8 +41,8 @@ elif [ $step = "fcst" ]; then
     export wtime_fcst="07:58:00"
     export wtime_fcst_gfs="07:58:00"
     export npe_fcst=$(echo "$layout_x * $layout_y * 6" | bc)
-    export npe_ocn=360
-    export npe_ice=24
+    export npe_ocn=240
+    export npe_ice=48
     export npe_node_fcst=${npe_node_fcst:-12}
     export nth_fcst=2
     if [[ "$machine" == "WCOSS_C" ]]; then
