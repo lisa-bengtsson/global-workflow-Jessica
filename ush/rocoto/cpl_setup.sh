@@ -60,7 +60,7 @@ GFS_CYC=1
 # $EXPDIR is the path to your experiment directory where your configs will be placed and where you will find your workflow monitoring files (i.e. rocoto database and xml file). DO NOT include PSLOT folder at end of path, it will be built for you.
 
 #EXPDIR=/scratch4/NCEPDEV/nems/noscrub/${USER}/benchmark2/${YMD}/EXPFV3
-EXPDIR=/stmpd2/${USER}/preUFSp4/EXPFV3/${IDATE}
+EXPDIR=/stmpd2/Jessica.Meixner/p4base/EXPFV3/${IDATE}
 mkdir -p $EXPDIR
 
 ./setup_expt_fcstonly.py --pslot $PSLOT --configdir $CONFIGDIR --idate $IDATE --edate $EDATE --res $RES --gfs_cyc $GFS_CYC --comrot $COMROT --expdir $EXPDIR
