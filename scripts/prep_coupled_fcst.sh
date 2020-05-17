@@ -34,6 +34,10 @@ cp $HOMEgfs/sorc/fv3gfs.fd/FV3/ccpp/suites/suite_FV3_GFS_v15p2_coupled.xml .
 cp -p $FIXcice/kmtu_cice_NEMS_mx025.nc .
 cp -p $FIXcice/grid_cice_NEMS_mx025.nc .
 
+#Copy wave files 
+cp -p $HOMEgfs/fix/fix_wav/ww3_multi.inp . 
+cp -p $HOMEgfs/fix/fix_wav/mod_def.* . 
+
 cd INPUT
 
 # Copy MOM6 ICs (from CFSv2 file)
@@ -49,9 +53,9 @@ cp -p $HOMEgfs/fix/fix_cpl/aC384o025/grid_spec.nc .
 #cp -p $FIXmom/INPUT/MOM_input_update MOM_input
 #JW add runoff option
 #cp -p $FIXmom/INPUT/MOM_input_update_runoff MOM_input
-cp -p $HOMEgfs/parm/parm_mom6/MOM_input_runoff MOM_input 
+##cp -p $HOMEgfs/parm/parm_mom6/MOM_input_runoff MOM_input 
 #for wave ocean coupling: 
-#cp -p $HOMEgfs/parm/parm_mom6/MOM_input_wav MOM_input
+cp -p $HOMEgfs/parm/parm_mom6/MOM_input_wav MOM_input
 
 # Copy grid_spec and mosaic files
 cp -pf $FIXgrid/$CASE/* .
@@ -107,19 +111,21 @@ elif [ $CASE = "C384" ] ; then
   #ATM_petlist_bounds=${ATM_petlist_bounds:-'0 263'}    #192+wrtgrps(72)
   #OCN_petlist_bounds=${OCN_petlist_bounds:-'264 503'}  #240
   #ICE_petlist_bounds=${ICE_petlist_bounds:-'504 623'}  #120
-  MED_petlist_bounds=${MED_petlist_bounds:-'0 311'}
-  ATM_petlist_bounds=${ATM_petlist_bounds:-'0 311'}    #6*8*6+wrtgrps(24)
+  ##MED_petlist_bounds=${MED_petlist_bounds:-'0 311'}
+  ##ATM_petlist_bounds=${ATM_petlist_bounds:-'0 311'}    #6*8*6+wrtgrps(24)
 #  OCN_petlist_bounds=${OCN_petlist_bounds:-'312 431'}  #120
-  OCN_petlist_bounds=${OCN_petlist_bounds:-'312 551'}   #240
+  ##OCN_petlist_bounds=${OCN_petlist_bounds:-'312 551'}   #240
 #  ICE_petlist_bounds=${ICE_petlist_bounds:-'432 479'}  #48
-  ICE_petlist_bounds=${ICE_petlist_bounds:-'552 599'}  #48
+  ##ICE_petlist_bounds=${ICE_petlist_bounds:-'552 599'}  #48
   #ICE_petlist_bounds=${ICE_petlist_bounds:-'432 455'}  #24
 
-  # This is 6x12 layout * 6 = 432 + 72 # didn't work
-  #MED_petlist_bounds=${MED_petlist_bounds:-'0 503'}
-  #ATM_petlist_bounds=${ATM_petlist_bounds:-'0 503'}    #432+wrtgrps(72)
-  #OCN_petlist_bounds=${OCN_petlist_bounds:-'504 743'}  #240
-  #ICE_petlist_bounds=${ICE_petlist_bounds:-'744 863'}  #120
+  # This is 6x12 layout * 6 = 432 + 24 + waves
+  MED_petlist_bounds=${MED_petlist_bounds:-'0 431'}
+  ATM_petlist_bounds=${ATM_petlist_bounds:-'0 455'}    #432+wrtgrps(24)
+  OCN_petlist_bounds=${OCN_petlist_bounds:-'456 695'}  #240
+  ICE_petlist_bounds=${ICE_petlist_bounds:-'696 743'}  #48
+  WAV_petlist_bounds=${WAV_petlist_bounds:-'744 865'}  #122
+
 else
   echo "$CASE not supported for coupled yet"
   exit -1
@@ -131,7 +137,7 @@ cat > nems.configure <<eof
 #############################################
 
 # EARTH #
-EARTH_component_list: MED ATM OCN ICE
+EARTH_component_list: MED ATM OCN ICE WAV
 EARTH_attributes::
   Verbosity = 0
 ::
@@ -141,6 +147,7 @@ MED_model:                      nems
 MED_petlist_bounds:             $MED_petlist_bounds
 MED_attributes::
   Verbosity = 0
+  ProfileMemory = false
   DumpFields = $DumpFields
   DumpRHs = $DumpFields
   coldstart = $coldstart
@@ -152,6 +159,7 @@ ATM_model:                      fv3
 ATM_petlist_bounds:             $ATM_petlist_bounds
 ATM_attributes::
   Verbosity = 0
+  ProfileMemory = false
   DumpFields = $DumpFields
 ::
 
@@ -162,6 +170,7 @@ OCN_attributes::
   Verbosity = 0
   DumpFields = $DumpFields
   restart_interval = $restart_interval
+  ProfileMemory = false
 ::
 
 # ICE #
@@ -169,7 +178,16 @@ ICE_model:                      cice
 ICE_petlist_bounds:             $ICE_petlist_bounds
 ICE_attributes::
   Verbosity = 0
+  ProfileMemory = false
   DumpFields = $DumpFields
+::
+
+# WAV # 
+WAV_model:                      ww3
+WAV_petlist_bounds:             $WAV_petlist_bounds
+WAV_attributes::
+  Verbosity = 0
+  OverwriteSlice = false
 ::
 eof
 
@@ -181,14 +199,20 @@ cat >> nems.configure <<eof
 # Coldstart Run Sequence #
 runSeq::
   @${CPL_SLOW}
+    OCN -> WAV
+    WAV -> OCN :srcMaskValues=1
     @${CPL_FAST}
       MED MedPhase_prep_atm
       MED -> ATM :remapMethod=redist
+      WAV -> ATM :srcMaskValues=1
       ATM
+      ATM -> WAV
       ATM -> MED :remapMethod=redist
       MED MedPhase_prep_ice
       MED -> ICE :remapMethod=redist
       ICE
+      ICE -> WAV
+      WAV
       ICE -> MED :remapMethod=redist
       MED MedPhase_atm_ocn_flux
       MED MedPhase_accum_fast
@@ -209,14 +233,20 @@ runSeq::
   @${CPL_SLOW}
     MED MedPhase_prep_ocn
     MED -> OCN :remapMethod=redist
+    OCN -> WAV
+    WAV -> OCN :srcMaskValues=1
     OCN
     @${CPL_FAST}
       MED MedPhase_prep_ice
       MED MedPhase_prep_atm
       MED -> ATM :remapMethod=redist
       MED -> ICE :remapMethod=redist
+      WAV -> ATM :srcMaskValues=1
+      ATM -> WAV
+      ICE -> WAV
       ATM
       ICE
+      WAV
       ATM -> MED :remapMethod=redist
       ICE -> MED :remapMethod=redist
       MED MedPhase_atm_ocn_flux

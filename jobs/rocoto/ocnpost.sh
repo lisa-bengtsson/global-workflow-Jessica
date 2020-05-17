@@ -206,6 +206,10 @@ done
     $NCP -p input.nml $COMOUT/
     $NCP -p ice_in $COMOUT/
     $NCP -p INPUT/MOM_input $COMOUT/
+    $NCP -p ww3_multi.inp $COMOUT/
+    $NCP -p mod_def.* $COMOUT/
+    $NCP -p *out_pnt* $COMOUT/
+    $NCP -p *out_grd* $COMOUT/
     
 #rm -Rf $DATA
 exit 0

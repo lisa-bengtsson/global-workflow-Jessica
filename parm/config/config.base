@@ -231,11 +231,11 @@ export PSLOT="@PSLOT@"
 export EXPDIR="@EXPDIR@/$PSLOT"
 export ROTDIR="@ROTDIR@/$PSLOT"
 #export RUNDIR="$STMP/RUNDIRS/$PSLOT"
-export RUNDIR="/stmpd2/$USER/p4base/RUNDIRS/$PSLOT"
+export RUNDIR="/stmpd2/$USER/preUFSp4/RUNDIRS/$PSLOT"
 export ARCDIR="$NOSCRUB/archive/$PSLOT"
 export ICSDIR="@ICSDIR@"
 #export ATARDIR="/NCEPDEV/$HPSS_PROJECT/5year/$USER/$machine/scratch/benchmark2/$PSLOT"
-export ATARDIR="/NCEPDEV/$HPSS_PROJECT/5year/$USER/$machine/scratch/UFSp4_base/$PSLOT"
+export ATARDIR="/NCEPDEV/$HPSS_PROJECT/5year/$USER/$machine/scratch/preUFSp4/$PSLOT"
 
 # For coupled
 #export UGCSICSDIR="$NOSCRUB/UGCS/ugcsics_cfsv2op"

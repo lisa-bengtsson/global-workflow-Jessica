@@ -914,6 +914,8 @@ cat > input.nml <<EOF
   do_ugwp      = ${do_ugwp:-.true.}
   do_tofd      = ${do_tofd:-.true.}
   cplflx       = ${cplflx:-".F."}
+  cplwav       = .T.
+  cplwav2atm   = .T.
 EOF
 
 # Add namelist for IAU

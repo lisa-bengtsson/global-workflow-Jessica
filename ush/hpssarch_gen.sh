@@ -38,6 +38,7 @@ if [ $type = "gfs" ]; then
   rm -f ice.txt
   rm -f ocn_daily.txt
   rm -f wavocn.txt
+  rm -f wave.txt
   touch gfsa.txt
   touch gfsb.txt
   touch gfs_pgrb2b.txt
@@ -45,7 +46,7 @@ if [ $type = "gfs" ]; then
   touch gfs_nemsioa.txt
   touch gfs_nemsiob.txt
   #touch gfs_restarta.txt
-  touch ocn_2D.txt ocn_3D.txt ocn_xsect.txt ocn_daily.txt log.txt ice.txt
+  touch ocn_2D.txt ocn_3D.txt ocn_xsect.txt ocn_daily.txt log.txt ice.txt wavocn.txt wave.txt
 
   dirname="./gfs.${PDY}/${cyc}/"
   head="gfs.t${cyc}z."
@@ -61,6 +62,12 @@ if [ $type = "gfs" ]; then
   echo  "${dirname}input.nml        " >>log.txt
   echo  "${dirname}ice_in           " >>log.txt
   echo  "${dirname}MOM_input        " >>log.txt
+  echo  "${dirname}ww3_multi.inp    " >>log.txt
+  echo  "${dirname}ww3_multi.inp    " >>wave.txt
+  echo  "${dirname}*out_grd*        " >>wave.txt
+  echo  "${dirname}*out_pnt*        " >>wave.txt
+  echo  "${dirname}*mod_def*        " >>wave.txt
+
 # BL2018, ocn and ice
   #..................
 #  echo  "${dirname}${head}pgrb2b.0p25.anl                  " >>gfs_pgrb2b.txt

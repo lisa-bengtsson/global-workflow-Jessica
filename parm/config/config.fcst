@@ -31,7 +31,7 @@ if [ $QUILTING = ".true." ]; then
 fi
 
 if [ $cpl = ".true." ] ; then
-  export npe_fv3=$(echo " $npe_fv3 + $npe_ocn + $npe_ice" | bc )
+  export npe_fv3=$(echo " $npe_fv3 + $npe_ocn + $npe_ice + $npe_wav" | bc )
   export npe_fcst=$npe_fv3
 fi
 

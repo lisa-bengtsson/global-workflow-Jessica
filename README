@@ -17,6 +17,7 @@ elif [ $machine = "WCOSS" ]; then
     export ACCOUNT="CFS-T2O"   <-- change to your group account if needed
 
 HPSS_PROJECT=emc-marine  <-- change to your group account if needed
+ATARDIR <- is the final path for HPSS
 
 export FHMAX=840  <-- change forecast length if needed
 export FHMAX_GFS_00=840  <-- change forecast length if needed

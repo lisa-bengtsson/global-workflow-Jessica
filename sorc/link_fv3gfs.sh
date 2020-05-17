@@ -64,6 +64,7 @@ $LINK $CPLFIX_DIR/fix_cice5    .
 $LINK $CPLFIX_DIR/fix_mom6     .
 $LINK $CPLFIX_DIR/fix_fv3grid  .
 $LINK $CPLFIX_DIR/fix_cpl      .
+$LINK $CPLFIX_DIR/fix_wav      .
 
 #--add gfs_post file
 cd ${pwd}/../jobs               ||exit 8

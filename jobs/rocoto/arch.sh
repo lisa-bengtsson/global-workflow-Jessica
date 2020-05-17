@@ -159,7 +159,7 @@ cd $ROTDIR
     gzip $COMIN/ocn_2D*nc $COMIN/ocn_3D*nc $COMIN/ice*nc $COMIN/ocn_daily*nc $COMIN/wavocn*nc
     echo `date`
     echo "gzip done !"
-    for targrp in ocn_2D ocn_3D ocn_xsect ice ocn_daily log wavocn; do
+    for targrp in ocn_2D ocn_3D ocn_xsect ice ocn_daily log wavocn wave; do
         htar -P -cvf $ATARDIR/$CDATE/${targrp}_c384.tar `cat $ARCH_LIST/${targrp}.txt`
     done
 #BL2018
