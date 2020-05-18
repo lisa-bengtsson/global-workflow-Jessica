@@ -65,6 +65,7 @@ if [ $type = "gfs" ]; then
   echo  "${dirname}ww3_multi.inp    " >>log.txt
   echo  "${dirname}ww3_multi.inp    " >>wave.txt
   echo  "${dirname}*out_grd*        " >>wave.txt
+  echo  "${dirname}restart.gwes_30m " >>wave.txt
   echo  "${dirname}*out_pnt*        " >>wave.txt
   echo  "${dirname}*mod_def*        " >>wave.txt
 

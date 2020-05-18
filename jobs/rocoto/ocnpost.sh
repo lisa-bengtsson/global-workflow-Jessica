@@ -33,7 +33,6 @@ status=$?
 
 
 ##############################################
-y
 # Obtain unique process id (pid) and make temp directory
 ##############################################
 export job=${job:-"ocnpost"}
@@ -210,6 +209,7 @@ done
     $NCP -p mod_def.* $COMOUT/
     $NCP -p *out_pnt* $COMOUT/
     $NCP -p *out_grd* $COMOUT/
+    $NCP -p restart.gwes_30m $COMOUT/
     
 #rm -Rf $DATA
 exit 0
