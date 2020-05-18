@@ -167,13 +167,15 @@ cd $ROTDIR
 if [ $CDUMP = "gfs" ]; then
 
     #for targrp in gfsa gfsb - NOTE - do not check htar error status
-    for targrp in gfsa gfsb; do
-        htar -P -cvf $ATARDIR/$CDATE/${targrp}.tar `cat $ARCH_LIST/${targrp}.txt`
-    done
+#    for targrp in gfsa gfsb; do
+#        htar -P -cvf $ATARDIR/$CDATE/${targrp}.tar `cat $ARCH_LIST/${targrp}.txt`
+#    done
+    htar -P -cvf $ATARDIR/$CDATE/gfs_pgrb2_0p25.tar `cat $ARCH_LIST/gfsa.txt`
+    htar -P -cvf $ATARDIR/$CDATE/gfs_pgrb2_1p00.tar `cat $ARCH_LIST/gfsb.txt`
 
     #for targrp in gfs_flux gfs_nemsio gfs_pgrb2b; do
 #    for targrp in gfs_flux gfs_nemsioa gfs_nemsiob gfs_pgrb2b; do
-    for targrp in gfs_nemsioa gfs_nemsiob gfs_pgrb2b; do
+    for targrp in gfs_nemsioa gfs_nemsiob gfs_pgrb2_1p00 gfs_pgrb2_0p25 gfs_pgrb2b_1p00 gfs_pgrb2b_0p25; do
     #for targrp in gfs_flux gfs_nemsioa gfs_nemsiob gfs_pgrb2b gfs_nemsio_c; do
         htar -P -cvf $ATARDIR/$CDATE/${targrp}.tar `cat $ARCH_LIST/${targrp}.txt`
         status=$?

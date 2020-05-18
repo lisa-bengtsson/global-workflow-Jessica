@@ -25,7 +25,8 @@ if [ $type = "gfs" ]; then
 
   rm -f gfsa.txt
   rm -f gfsb.txt
-  rm -f gfs_pgrb2b.txt
+  rm -f gfs_pgrb2b_1p00.txt
+  rm -f gfs_pgrb2b_0p25.txt
   rm -f gfs_flux.txt
   rm -f gfs_flux_1p00.txt
   rm -f gfs_nemsioa.txt
@@ -41,7 +42,7 @@ if [ $type = "gfs" ]; then
   rm -f wave.txt
   touch gfsa.txt
   touch gfsb.txt
-  touch gfs_pgrb2b.txt
+  touch gfs_pgrb2b_1p00.txt gfs_pgrb2b_0p25.txt 
   touch gfs_flux.txt
   touch gfs_nemsioa.txt
   touch gfs_nemsiob.txt
@@ -62,11 +63,13 @@ if [ $type = "gfs" ]; then
   echo  "${dirname}input.nml        " >>log.txt
   echo  "${dirname}ice_in           " >>log.txt
   echo  "${dirname}MOM_input        " >>log.txt
+  echo  "./logs/${CDATE}/gfs*.log   " >>log.txt
+  echo  "${dirname}${head}logf*.nemsio " >>log.txt
   echo  "${dirname}ww3_multi.inp    " >>log.txt
   echo  "${dirname}ww3_multi.inp    " >>wave.txt
   echo  "${dirname}*out_grd*        " >>wave.txt
-  echo  "${dirname}restart.gwes_30m " >>wave.txt
   echo  "${dirname}*out_pnt*        " >>wave.txt
+  echo  "${dirname}restart.gwes_30m " >>wave.txt
   echo  "${dirname}*mod_def*        " >>wave.txt
 
 # BL2018, ocn and ice
@@ -92,7 +95,7 @@ if [ $type = "gfs" ]; then
 #  echo  "${dirname}nawips/gfs_${PDY}${cyc}.sfc             " >>gfsa.txt
 #  echo  "${dirname}nawips/gfs_${PDY}${cyc}.snd             " >>gfsa.txt
 #  echo  "${dirname}bufr.t${cyc}z                           " >>gfsa.txt
-  echo  "./logs/${CDATE}/gfs*.log                          " >>gfsa.txt
+#  echo  "./logs/${CDATE}/gfs*.log                          " >>gfsa.txt
 
 #  echo  "${dirname}${head}pgrb2.0p50.anl                   " >>gfsb.txt
 #  echo  "${dirname}${head}pgrb2.0p50.anl.idx               " >>gfsb.txt
@@ -103,12 +106,12 @@ if [ $type = "gfs" ]; then
   fh=0
   while [ $fh -le $FHMAX_GFS ]; do
     fhr=$(printf %03i $fh)
-    echo  "${dirname}${head}pgrb2b.0p25.f${fhr}             " >>gfs_pgrb2b.txt
-    echo  "${dirname}${head}pgrb2b.0p25.f${fhr}.idx         " >>gfs_pgrb2b.txt
+    echo  "${dirname}${head}pgrb2b.0p25.f${fhr}             " >>gfs_pgrb2b_0p25.txt
+    echo  "${dirname}${head}pgrb2b.0p25.f${fhr}.idx         " >>gfs_pgrb2b_0p25.txt
 #    echo  "${dirname}${head}pgrb2b.0p50.f${fhr}             " >>gfs_pgrb2b.txt
 #    echo  "${dirname}${head}pgrb2b.0p50.f${fhr}.idx         " >>gfs_pgrb2b.txt
-    echo  "${dirname}${head}pgrb2b.1p00.f${fhr}             " >>gfs_pgrb2b.txt
-    echo  "${dirname}${head}pgrb2b.1p00.f${fhr}.idx         " >>gfs_pgrb2b.txt
+    echo  "${dirname}${head}pgrb2b.1p00.f${fhr}             " >>gfs_pgrb2b_1p00.txt
+    echo  "${dirname}${head}pgrb2b.1p00.f${fhr}.idx         " >>gfs_pgrb2b_1p00.txt
 
     echo  "${dirname}${head}sfluxgrbf${fhr}.grib2           " >>gfs_flux.txt
     echo  "${dirname}${head}sfluxgrbf${fhr}.grib2.idx       " >>gfs_flux.txt
