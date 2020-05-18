@@ -38,6 +38,11 @@ cp -p $FIXcice/grid_cice_NEMS_mx025.nc .
 cp -p $HOMEgfs/fix/fix_wav/ww3_multi.inp . 
 cp -p $HOMEgfs/fix/fix_wav/mod_def.* . 
 
+#Copy wave IC: 
+
+WW3ICDATE=$(echo $CDATE | cut -c1-8)
+cp -p /marine/noscrub/Jessica.Meixner/CFSRICWW3/$WW3ICDATE.000000.restart.gwes_30m restart.gwes_30m
+
 cd INPUT
 
 # Copy MOM6 ICs (from CFSv2 file)
