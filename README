@@ -1,9 +1,9 @@
 How to run workflow on wcoss phase 2 
 
 1. code checkout and system build:
-git clone https://github.com/JessicaMeixner-NOAA/global-workflow global-workflow-ufsp4
-cd global-workflow-ufsp4
-git checkout ufs_s2s_p4_wcossphase2
+git clone https://github.com/noaa-emc/global-workflow global-workflow
+cd global-workflow
+git checkout s2s_prototype4.0_wcoss2
 #to run fv3-mom6-cice5 updated but no waves use commit hash: 5b2e632991c01bdfe45408d4faca2e096f8bab05
 git submodule update --init --recursive
 cd sorc

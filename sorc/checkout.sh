@@ -8,13 +8,9 @@ echo fv3gfs coupled checkout ...
 if [[ ! -d fv3gfs.fd ]] ; then
     rm -f ${topdir}/checkout-fv3gfs.log
    
-   git clone https://github.com/JessicaMeixner-NOAA/ufs-s2s-model.git fv3gfs.fd >> ${topdir}/checkout-fv3gfs.log 2>&1
-   cd fv3gfs.fd
-   git checkout 85dc6cc0e20f3545b0ac17c23d8562ea7b0fc534 
-   #wcossphase2 branch 
-   #prototype 4 tag + wcoss porting updates
-
-
+    git clone https://github.com/ufs-community/ufs-s2s-model.git fv3gfs.fd >> ${topdir}/checkout-fv3gfs.log 2>&1
+    cd fv3gfs.fd
+    git checkout s2s_prototype4.0_wcoss2
     git submodule update --init --recursive
     cd ${topdir}
 else
