@@ -245,7 +245,8 @@ elif [ $step = "fcst" ]; then
                 'gnh_10m aoc_9km gsh_15m') export WAVPETS=140 ;;
                 'gwes_30m') export WAVPETS=100 ;;
                 'mx050') export WAVPETS=240 ;;
-                'mx025') export WAVPETS=80 ;;
+                'mx025') export WAVPETS=200 ;;
+                'mx025out') export WAVPETS=200 ;;
                 *)
                     echo "FATAL: Number of PEs not defined for wave grid '$waveGRD'"
                     echo "  Please add an entry to config.resources within fcst for this grid"

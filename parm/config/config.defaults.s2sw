@@ -30,19 +30,32 @@ MEDPETS=300
 
 # config.wave
 
-waveGRD='gwes_30m'
-waveinterpGRD=' '
-waveuoutpGRD='gwes_30m'
-MESH_WAV='mesh.gwes_30m.nc'
+#One way (cplwav2atm=false) or two way (cplwav2atm=true) coupling with atm: 
+export cplwav2atm=".true."
+#set outer loop coupling as yes/no: 
+outerloop="YES" 
+if [ $outerloop = "YES" ]; then
+  export confignamevarfornems="${confignamevarfornems}_out"
+  waveGRD='mx025out'
+  waveinterpGRD='reg025'
+  waveuoutpGRD='mx025out'
+  MESH_WAV='mesh.mx025.nc'
+  wavepostGRD=' '
+else
+  waveGRD='mx025'
+  waveinterpGRD='reg025'
+  waveuoutpGRD='mx025'
+  MESH_WAV='mesh.mx025.nc'
+  wavepostGRD=' '
+fi 
 
 waveesmfGRD=' '
-wavepostGRD='gwes_30m'
 waveGRDN="1"
 waveGRDG="10"
 USE_WAV_RMP="NO"
-FHOUT_HF_WAV=3
+FHOUT_HF_WAV=3  
 DTPNT_WAV=10800
-OUTPARS_WAV="WND CUR ICE HS T01 T02 DIR FP DP PHS PTP PDIR CHA"
+OUTPARS_WAV="WND CUR ICE HS T01 T02 DIR FP DP PHS PTP PDIR CHA UST"
 DOBNDPNT_WAVE='NO'
 waveMULTIGRID='.false.'
 
