@@ -88,12 +88,17 @@ if [ $DO_WAVE = "YES" ]; then
     ymdhww3="$(echo $CDATE | cut -c1-8)"
     cp /scratch1/NCEPDEV/climate/Jessica.Meixner/WW3ICGEFS_tri03/RestartFiles/${ymdhww3}.000000.restart.ww3 $ICSDIR/$CDATE/wav/${ymdhww3}.000000.restart.$grdID
    else
+    if [ $waveGRD = "mx025" ]; then 
+      ymdhww3="$(echo $CDATE | cut -c1-8)"
+      cp /scratch1/NCEPDEV/climate/Jessica.Meixner/WW3ICGEFS_tri03/RestartFiles/${ymdhww3}.000000.restart.ww3 $ICSDIR/$CDATE/wav/${ymdhww3}.000000.restart.$grdID
+    else 
     cp $BASE_CPLIC/$CPL_WAVIC/$CDATE/wav/$grdID/*restart.$grdID $ICSDIR/$CDATE/wav/
     rc=$?
     if [[ $rc -ne 0 ]] ; then
       echo "FATAL: Unable to copy $BASE_CPLIC/$CPL_WAVIC/$CDATE/wav/$grdID/*restart.$grdID to $ICSDIR/$CDATE/wav/ (Error code $rc)" 
     fi
     err=$((err + rc))
+   fi
    fi 
   done
 fi
