@@ -1,4 +1,4 @@
-#!/bin/ksh -x
+#! /usr/bin/env bash
 
 ########## config.fcst ##########
 # Forecast specific
@@ -122,7 +122,7 @@ if [ $gwd_opt -eq 2 ]; then
     #export  do_gsl_drag_tofd=".true."
     #export  do_ugwp_v1_orog_only=".false."
   
-    #--used for UFS p8b 
+    #--used for UFS p8 
     export knob_ugwp_version=0
     export do_ugwp=".false."
     export do_tofd=".false."
