@@ -11,7 +11,7 @@ source "${HOMEgfs}/ush/jjob_header.sh" -e "ocnanalpost" -c "base ocnanalpost"
 ##############################################
 
 export COMOUT=${COMOUT:-${ROTDIR}/${CDUMP}.${PDY}/${cyc}/ocean}
-export COMOUTice=${${ROTDIR}/${CDUMP}.${PDY}/${cyc}/ice}
+export COMOUTice=${ROTDIR}/${CDUMP}.${PDY}/${cyc}/ice
 export CDATE=${CDATE:-${PDY}${cyc}}
 
 mkdir -p "${COMOUT}/RESTART"
