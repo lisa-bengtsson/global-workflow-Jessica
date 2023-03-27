@@ -13,7 +13,7 @@ class Tasks:
     VALID_TASKS = ['aerosol_init', 'coupled_ic', 'getic', 'init',
                    'prep', 'anal', 'sfcanl', 'analcalc', 'analdiag', 'gldas', 'arch',
                    'atmanalprep', 'atmanalrun', 'atmanalpost',
-                   'ocnanalprep', 'ocnanalbmat', 'ocnanalrun', 'ocnanalpost',
+                   'ocnanalprep', 'ocnanalbmat', 'ocnanalrun', 'ocnanalpost', 'ocnanalvrfy',
                    'earc', 'ecen', 'echgres', 'ediag', 'efcs',
                    'eobs', 'eomg', 'epos', 'esfc', 'eupd',
                    'atmensanalprep', 'atmensanalrun', 'atmensanalpost',
@@ -556,6 +556,22 @@ class Tasks:
 
         resources = self.get_resource('ocnanalpost')
         task = create_wf_task('ocnanalpost',
+                              resources,
+                              cdump=self.cdump,
+                              envar=self.envars,
+                              dependency=dependencies)
+
+        return task
+
+    def ocnanalvrfy(self):
+
+        deps = []
+        dep_dict = {'type': 'task', 'name': f'{self.cdump}ocnanalpost'}
+        deps.append(rocoto.add_dependency(dep_dict))
+        dependencies = rocoto.create_dependency(dep_condition='and', dep=deps)
+
+        resources = self.get_resource('ocnanalvrfy')
+        task = create_wf_task('ocnanalvrfy',
                               resources,
                               cdump=self.cdump,
                               envar=self.envars,
