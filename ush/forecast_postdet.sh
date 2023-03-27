@@ -1001,7 +1001,7 @@ CICE_postdet() {
 
   # Copy/link CICE IC to DATA
   if [[ "${warm_start}" = ".true." ]]; then
-    cice_ana="${ROTDIR}/${CDUMP}.${gPDY}/${gcyc}/ice/RESTART/${PDY}.${cyc}0000.cice_model_anl.res.nc"
+    cice_ana="${ROTDIR}/${CDUMP}.${PDY}/${cyc}/ice/RESTART/${PDY}.${cyc}0000.cice_model_anl.res.nc"
     if [[ -e $cice_ana ]]; then
       $NLN "${cice_ana}" "${DATA}/cice_model.res.nc"
     else
