@@ -14,7 +14,6 @@ export COMOUT=${COMOUT:-${ROTDIR}/${CDUMP}.${PDY}/${cyc}/ocean}
 export COMOUTice=${ROTDIR}/${CDUMP}.${PDY}/${cyc}/ice
 export CDATE=${CDATE:-${PDY}${cyc}}
 
-mkdir -p "${COMOUT}/RESTART"
 mkdir -p "${COMOUTice}/RESTART"
 
 ###############################################################
