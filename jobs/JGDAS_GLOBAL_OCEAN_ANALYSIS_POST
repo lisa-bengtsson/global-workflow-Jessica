@@ -11,9 +11,10 @@ source "${HOMEgfs}/ush/jjob_header.sh" -e "ocnanalpost" -c "base ocnanalpost"
 ##############################################
 
 export COMOUT=${COMOUT:-${ROTDIR}/${CDUMP}.${PDY}/${cyc}/ocean}
+export COMOUTice=${ROTDIR}/${CDUMP}.${PDY}/${cyc}/ice
 export CDATE=${CDATE:-${PDY}${cyc}}
 
-mkdir -p "${COMOUT}"
+mkdir -p "${COMOUTice}/RESTART"
 
 ###############################################################
 # Run relevant script
@@ -35,12 +36,16 @@ bdate=$(date -d "${CDATE:0:8} ${CDATE:8:2} - 3 hours" +"%Y-%m-%dT%H:00:00Z")
 cp "${DATA}/ocn.bkgerr_stddev.incr.${bdate}.nc" "${COMOUT}/${CDUMP}.t${cyc}z.ocn.bkgerr_stddev.nc"
 cp "${DATA}/ice.bkgerr_stddev.incr.${bdate}.nc" "${COMOUT}/${CDUMP}.t${cyc}z.ice.bkgerr_stddev.nc"
 
-# Copy the loacalization and correlation operators
+# Copy the localization and correlation operators
 cp -rL "${DATA}/bump" "${COMOUT}/bump"
 
 # Copy the analysis in the middle of the window
 cdate=$(date -d "${CDATE:0:8} ${CDATE:8:2}" +"%Y-%m-%dT%H:00:00Z")
 cp "${DATA}/Data/ocn.3dvarfgat_pseudo.an.${cdate}.nc" "${COMOUT}/${CDUMP}.t${cyc}z.ocnana.nc"
+
+# Copy the CICE analysis restart 
+cdate=$(date -d "${CDATE:0:8} ${CDATE:8:2}" +"%Y%m%d.%H0000")
+cp "${DATA}/Data/${cdate}.cice_model.res.nc" "${COMOUTice}/RESTART/${cdate}.cice_model_anl.res.nc"
 
 # Copy DA grid (computed for the start of the window)
 bcyc=$(((cyc - 3 + 24) % 24))
