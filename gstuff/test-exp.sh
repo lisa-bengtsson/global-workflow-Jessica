@@ -15,20 +15,35 @@ module load rocoto/1.3.3
 pkill -u ${USER} rocoto
 scancel -u ${USER}
 
-GWDIR=$PWD/global-workflow
+GWDIR=${PWD}/global-workflow
 CONFIGDIR=$GWDIR/parm/config
 BASEDIR=$PWD # were we run/dump stuff
 
 # Experiment setup. 
-# possible start dates: 2021032312 2019063000 2021063006 2021070106
-cyc=12
-cdate=20210701
+PSLOT=golden-c384 #iceinit_c384
+RES=384 #48 #384
+case $RES in
+  "384")
+	echo "Golden period with AC384-O025"
+	ORES=025
+	cyc=12
+	cdate=20210701
+	EDATE=2021071500
+	;;
+  "48")
+	echo "Low-res test with AC48-O500"
+	ORES=500
+	cyc=12
+	cdate=20210323
+	EDATE=2021033000
+	;;
+  "*")
+    echo "Invalid resolution"
+    ;;
+esac
+
 APP=S2S
 IDATE=${cdate}${cyc}
-EDATE=2021071500
-PSLOT=golden
-RES=384
-ORES=025
 GFS_CYC=0
 COMROT=$BASEDIR/$PSLOT/COMROT
 EXPDIR=$BASEDIR/$PSLOT/EXPDIR
