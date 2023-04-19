@@ -20,7 +20,7 @@ CONFIGDIR=$GWDIR/parm/config
 BASEDIR=$PWD # were we run/dump stuff
 
 # Experiment setup. 
-PSLOT=golden-c384 #iceinit_c384
+PSLOT=nsst_hires #golden-c384 #iceinit_c384
 RES=384 #48 #384
 case $RES in
   "384")
