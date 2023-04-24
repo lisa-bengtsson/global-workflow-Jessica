@@ -221,7 +221,7 @@ if [[ ${type} = "gfs" ]]; then
     head="gfs.t${cyc}z."
 
     rm -f gfs_flux_1p00.txt
-    rm -f ocn_ice_grib2_0p5.txt 
+    rm -f ocn_ice_grib2_0p5.txt
     rm -f ocn_ice_grib2_0p25.txt
     rm -f ocn_2D.txt
     rm -f ocn_3D.txt
@@ -341,12 +341,15 @@ if [[ ${type} = "gdas" ]]; then
     echo  "${dirname}${head}sfcf${fhr}.nc              " >>gdas.txt
     fh=$((fh+3))
   done
-#  flist="001 002 004 005 007 008"
-#  for fhr in ${flist}; do
-#    echo  "${dirname}${head}sfluxgrbf${fhr}.grib2      " >>gdas.txt
-#    echo  "${dirname}${head}sfluxgrbf${fhr}.grib2.idx  " >>gdas.txt
-#  done
-  
+  flist="001 002 004 005 007 008"
+  for fhr in ${flist}; do
+    file="${dirname}${head}sfluxgrbf${fhr}.grib2"
+    # Only add to list if file is present.
+    if [[ -s "${file}" ]]; then
+      echo  "${file}"      >>gdas.txt
+      echo  "${file}.idx"  >>gdas.txt
+    fi
+  done
 
 
   #..................
@@ -505,7 +508,7 @@ if [ ${type} = "enkfgdas" -o ${type} = "enkfgfs" ]; then
         if [ -s $ROTDIR/${dirpath}${head}atmi00${FHR}.ensmean.nc ]; then
             echo  "${dirname}${head}atmi00${FHR}.ensmean.nc      " >>${RUN}.txt
         fi
-     fi 
+     fi
   done # loop over FHR
   for fstep in eobs ecen esfc eupd efcs epos ; do
    echo  "logs/${CDATE}/${RUN}${fstep}*.log        " >>${RUN}.txt
@@ -580,7 +583,7 @@ if [ ${type} = "enkfgdas" -o ${type} = "enkfgfs" ]; then
              echo "${dirname}${head}ratmi00${FHR}.nc      " >>${RUN}_restarta_grp${n}.txt
          fi
 
-      fi 
+      fi
       echo "${dirname}${head}atmf00${FHR}.nc       " >>${RUN}_grp${n}.txt
       if [ $FHR -eq 6 ]; then
 	  echo "${dirname}${head}sfcf00${FHR}.nc       " >>${RUN}_grp${n}.txt
@@ -629,4 +632,3 @@ fi   ##end of enkfgdas or enkfgfs
 #-----------------------------------------------------
 
 exit 0
-
