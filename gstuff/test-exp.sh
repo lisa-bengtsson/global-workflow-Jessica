@@ -16,12 +16,12 @@ pkill -u ${USER} rocoto
 scancel -u ${USER}
 
 GWDIR=${PWD}/global-workflow
-CONFIGDIR=$GWDIR/parm/config
+CONFIGDIR=$GWDIR/parm/config/gfs
 BASEDIR=$PWD # were we run/dump stuff
 
 # Experiment setup. 
-PSLOT=nsst_hires #golden-c384 #iceinit_c384
-RES=384 #48 #384
+PSLOT=tsuv_iau #golden-c384 #iceinit_c384
+RES=48 #48 #384
 case $RES in
   "384")
 	echo "Golden period with AC384-O025"
@@ -94,7 +94,7 @@ ICSDIR=/scratch2/NCEPDEV/ocean/Guillaume.Vernieres/data/ICSDIR/C${RES}O${ORES}
 
 # Create configs and comrot
 echo "setup experiment:"
-$GWDIR/workflow/setup_expt.py cycled --app $APP \
+$GWDIR/workflow/setup_expt.py gfs cycled --app $APP \
                                      --pslot $PSLOT \
                                      --configdir $CONFIGDIR \
                                      --idate $IDATE \
