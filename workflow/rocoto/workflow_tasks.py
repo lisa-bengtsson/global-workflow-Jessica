@@ -4,20 +4,22 @@ import numpy as np
 from typing import List
 from applications import AppConfig
 import rocoto.rocoto as rocoto
+from pygw.template import Template, TemplateConstants
 
 __all__ = ['Tasks', 'create_wf_task', 'get_wf_tasks']
 
 
 class Tasks:
-    SERVICE_TASKS = ['arch', 'earc', 'getic']
-    VALID_TASKS = ['aerosol_init', 'coupled_ic', 'getic', 'init',
-                   'prep', 'anal', 'sfcanl', 'analcalc', 'analdiag', 'gldas', 'arch',
+    SERVICE_TASKS = ['arch', 'earc']
+    VALID_TASKS = ['aerosol_init', 'coupled_ic',
+                   'prep', 'anal', 'sfcanl', 'analcalc', 'analdiag', 'arch',
                    'atmanlinit', 'atmanlrun', 'atmanlfinal',
                    'ocnanalprep', 'ocnanalbmat', 'ocnanalrun', 'ocnanalchkpt', 'ocnanalpost', 'ocnanalvrfy',
                    'earc', 'ecen', 'echgres', 'ediag', 'efcs',
                    'eobs', 'eomg', 'epos', 'esfc', 'eupd',
                    'atmensanlinit', 'atmensanlrun', 'atmensanlfinal',
                    'aeroanlinit', 'aeroanlrun', 'aeroanlfinal',
+                   'preplandobs', 'landanlinit', 'landanlrun', 'landanlfinal',
                    'fcst', 'post', 'ocnpost', 'vrfy', 'metp',
                    'postsnd', 'awips', 'gempak',
                    'wafs', 'wafsblending', 'wafsblending0p25',
@@ -68,6 +70,51 @@ class Tasks:
     def _is_this_a_gdas_task(cdump, task_name):
         if cdump != 'enkfgdas':
             raise TypeError(f'{task_name} must be part of the "enkfgdas" cycle and not {cdump}')
+
+    def _template_to_rocoto_cycstring(self, template: str, subs_dict: dict = {}) -> str:
+        '''
+        Takes a string templated with ${ } and converts it into a string suitable
+          for use in a rocoto <cyclestr>. Some common substitutions are defined by
+          default. Any additional variables in the template and overrides of the
+          defaults can be passed in by an optional dict.
+
+          Variables substitued by default:
+            ${ROTDIR} -> '&ROTDIR;'
+            ${RUN}    -> self.cdump
+            ${DUMP}   -> self.cdump
+            ${MEMDIR} -> ''
+            ${YMD}    -> '@Y@m@d'
+            ${HH}     -> '@H'
+
+        Parameters
+        ----------
+        template: str
+                  Template string with variables to be replaced
+        subs_dict: dict, optional
+                   Dictionary containing substitutions
+
+        Returns
+        -------
+        str
+            Updated string with variables substituted
+
+        '''
+
+        # Defaults
+        rocoto_conversion_dict = {
+            'ROTDIR': '&ROTDIR;',
+            'RUN': self.cdump,
+            'DUMP': self.cdump,
+            'MEMDIR': '',
+            'YMD': '@Y@m@d',
+            'HH': '@H'
+        }
+
+        rocoto_conversion_dict.update(subs_dict)
+
+        return Template.substitute_structure(template,
+                                             TemplateConstants.DOLLAR_CURLY_BRACE,
+                                             rocoto_conversion_dict.get)
 
     def get_resource(self, task_name):
         """
@@ -200,60 +247,24 @@ class Tasks:
 
         return task
 
-    def getic(self):
-
-        files = ['INPUT/sfc_data.tile6.nc',
-                 'RESTART/@Y@m@d.@H0000.sfcanl_data.tile6.nc']
-
-        deps = []
-        for file in files:
-            dep_dict = {'type': 'data', 'data': f'&ROTDIR;/{self.cdump}.@Y@m@d/@H/{file}'}
-            deps.append(rocoto.add_dependency(dep_dict))
-        dependencies = rocoto.create_dependency(dep_condition='nor', dep=deps)
-
-        resources = self.get_resource('getic')
-        task = create_wf_task('getic', resources, cdump=self.cdump, envar=self.envars, dependency=dependencies)
-
-        return task
-
-    def init(self):
-
-        files = ['gfs.t@Hz.sanl',
-                 'gfs.t@Hz.atmanl.nemsio',
-                 'gfs.t@Hz.atmanl.nc',
-                 'atmos/gfs.t@Hz.atmanl.nc',
-                 'atmos/RESTART/@Y@m@d.@H0000.sfcanl_data.tile6.nc']
-
-        deps = []
-        for file in files:
-            dep_dict = {'type': 'data', 'data': f'&ROTDIR;/{self.cdump}.@Y@m@d/@H/{file}'}
-            deps.append(rocoto.add_dependency(dep_dict))
-        dependencies = rocoto.create_dependency(dep_condition='or', dep=deps)
-
-        if self.app_config.do_hpssarch:
-            dep_dict = {'type': 'task', 'name': f'{self.cdump}getic'}
-            dependencies.append(rocoto.add_dependency(dep_dict))
-            dependencies = rocoto.create_dependency(dep_condition='and', dep=dependencies)
-
-        resources = self.get_resource('init')
-        task = create_wf_task('init', resources, cdump=self.cdump, envar=self.envars, dependency=dependencies)
-
-        return task
-
     def prep(self):
 
         dump_suffix = self._base["DUMP_SUFFIX"]
         gfs_cyc = self._base["gfs_cyc"]
         dmpdir = self._base["DMPDIR"]
+        atm_hist_path = self._template_to_rocoto_cycstring(self._base["COM_ATMOS_HISTORY_TMPL"], {'RUN': 'gdas'})
+        dump_path = self._template_to_rocoto_cycstring(self._base["COM_OBSDMP_TMPL"],
+                                                       {'DMPDIR': dmpdir, 'DUMP_SUFFIX': dump_suffix})
+
         gfs_enkf = True if self.app_config.do_hybvar and 'gfs' in self.app_config.eupd_cdumps else False
 
         deps = []
         dep_dict = {'type': 'metatask', 'name': 'gdaspost', 'offset': '-06:00:00'}
         deps.append(rocoto.add_dependency(dep_dict))
-        data = f'&ROTDIR;/gdas.@Y@m@d/@H/atmos/gdas.t@Hz.atmf009.nc'
+        data = f'{atm_hist_path}/gdas.t@Hz.atmf009.nc'
         dep_dict = {'type': 'data', 'data': data, 'offset': '-06:00:00'}
         deps.append(rocoto.add_dependency(dep_dict))
-        data = f'{dmpdir}/{self.cdump}{dump_suffix}.@Y@m@d/@H/atmos/{self.cdump}.t@Hz.updated.status.tm00.bufr_d'
+        data = f'{dump_path}/{self.cdump}.t@Hz.updated.status.tm00.bufr_d'
         dep_dict = {'type': 'data', 'data': data}
         deps.append(rocoto.add_dependency(dep_dict))
         dependencies = rocoto.create_dependency(dep_condition='and', dep=deps)
@@ -298,11 +309,14 @@ class Tasks:
 
     def aerosol_init(self):
 
+        input_path = self._template_to_rocoto_cycstring(self._base['COM_ATMOS_INPUT_TMPL'])
+        restart_path = self._template_to_rocoto_cycstring(self._base['COM_ATMOS_RESTART_TMPL'])
+
         deps = []
         # Files from current cycle
         files = ['gfs_ctrl.nc'] + [f'gfs_data.tile{tile}.nc' for tile in range(1, self.n_tiles + 1)]
         for file in files:
-            data = f'&ROTDIR;/{self.cdump}.@Y@m@d/@H/atmos/INPUT/{file}'
+            data = f'{input_path}/{file}'
             dep_dict = {'type': 'data', 'data': data}
             deps.append(rocoto.add_dependency(dep_dict))
 
@@ -320,7 +334,7 @@ class Tasks:
                 [f'@Y@m@d.@H0000.fv_tracer.res.tile{tile}.nc' for tile in range(1, self.n_tiles + 1)]
 
         for file in files:
-            data = [f'&ROTDIR;/{self.cdump}.@Y@m@d/@H/atmos/RERUN_RESTART/', file]
+            data = [f'{restart_path}', file]
             dep_dict = {'type': 'data', 'data': data, 'offset': [offset, None]}
             deps.append(rocoto.add_dependency(dep_dict))
 
@@ -357,7 +371,12 @@ class Tasks:
         else:
             dep_dict = {'type': 'task', 'name': f'{self.cdump}anal'}
         deps.append(rocoto.add_dependency(dep_dict))
-        dependencies = rocoto.create_dependency(dep=deps)
+        if self.app_config.do_jedilandda:
+            dep_dict = {'type': 'task', 'name': f'{self.cdump}landanlfinal'}
+            deps.append(rocoto.add_dependency(dep_dict))
+            dependencies = rocoto.create_dependency(dep_condition='and', dep=deps)
+        else:
+            dependencies = rocoto.create_dependency(dep=deps)
 
         resources = self.get_resource('sfcanl')
         task = create_wf_task('sfcanl', resources, cdump=self.cdump, envar=self.envars, dependency=dependencies)
@@ -447,18 +466,9 @@ class Tasks:
 
     def aeroanlinit(self):
 
-        dump_suffix = self._base["DUMP_SUFFIX"]
-        dmpdir = self._base["DMPDIR"]
-
         deps = []
-        dep_dict = {'type': 'metatask', 'name': 'gdaspost', 'offset': '-06:00:00'}
-        deps.append(rocoto.add_dependency(dep_dict))
-        data = f'&ROTDIR;/gdas.@Y@m@d/@H/atmos/gdas.t@Hz.atmf009.nc'
-        dep_dict = {'type': 'data', 'data': data, 'offset': '-06:00:00'}
-        deps.append(rocoto.add_dependency(dep_dict))
         dep_dict = {'type': 'task', 'name': f'{self.cdump}prep'}
         deps.append(rocoto.add_dependency(dep_dict))
-        dependencies = rocoto.create_dependency(dep_condition='and', dep=deps)
 
         resources = self.get_resource('aeroanlinit')
         task = create_wf_task('aeroanlinit', resources, cdump=self.cdump, envar=self.envars, dependency=dependencies)
@@ -488,13 +498,71 @@ class Tasks:
 
         return task
 
+    def preplandobs(self):
+
+        deps = []
+        dep_dict = {'type': 'task', 'name': f'{self.cdump}prep'}
+        deps.append(rocoto.add_dependency(dep_dict))
+        dependencies = rocoto.create_dependency(dep=deps)
+
+        resources = self.get_resource('preplandobs')
+        task = create_wf_task('preplandobs', resources, cdump=self.cdump, envar=self.envars, dependency=dependencies,
+                              cycledef=f'{self.cdump}_land_prep')
+
+        return task
+
+    def landanlinit(self):
+
+        deps = []
+        dep_dict = {'type': 'task', 'name': f'{self.cdump}prep'}
+        deps.append(rocoto.add_dependency(dep_dict))
+
+        # Either gdaspreplandobs (runs in 18z cycle) or not 18z cycle
+        sub_deps = []
+        dep_dict = {'type': 'task', 'name': f'{self.cdump}preplandobs'}
+        sub_deps.append(rocoto.add_dependency(dep_dict))
+        dep_dict = {'type': 'strneq', 'left': '@H', 'right': 18}
+        sub_deps.append(rocoto.add_dependency(dep_dict))
+        deps.append(rocoto.create_dependency(dep_condition='xor', dep=sub_deps))
+
+        dependencies = rocoto.create_dependency(dep_condition='and', dep=deps)
+
+        resources = self.get_resource('landanlinit')
+        task = create_wf_task('landanlinit', resources, cdump=self.cdump, envar=self.envars, dependency=dependencies)
+        return task
+
+    def landanlrun(self):
+
+        deps = []
+        dep_dict = {'type': 'task', 'name': f'{self.cdump}landanlinit'}
+        deps.append(rocoto.add_dependency(dep_dict))
+        dependencies = rocoto.create_dependency(dep=deps)
+
+        resources = self.get_resource('landanlrun')
+        task = create_wf_task('landanlrun', resources, cdump=self.cdump, envar=self.envars, dependency=dependencies)
+
+        return task
+
+    def landanlfinal(self):
+
+        deps = []
+        dep_dict = {'type': 'task', 'name': f'{self.cdump}landanlrun'}
+        deps.append(rocoto.add_dependency(dep_dict))
+        dependencies = rocoto.create_dependency(dep_condition='and', dep=deps)
+
+        resources = self.get_resource('landanlfinal')
+        task = create_wf_task('landanlfinal', resources, cdump=self.cdump, envar=self.envars, dependency=dependencies)
+
+        return task
+
     def ocnanalprep(self):
 
         dump_suffix = self._base["DUMP_SUFFIX"]
         dmpdir = self._base["DMPDIR"]
+        ocean_hist_path = self._template_to_rocoto_cycstring(self._base["COM_OCEAN_HISTORY_TMPL"])
 
         deps = []
-        data = f'&ROTDIR;/gdas.@Y@m@d/@H/ocean/gdas.t@Hz.ocnf009.nc'
+        data = f'{ocean_hist_path}/gdas.t@Hz.ocnf009.nc'
         dep_dict = {'type': 'data', 'data': data, 'offset': '-06:00:00'}
         deps.append(rocoto.add_dependency(dep_dict))
         dependencies = rocoto.create_dependency(dep=deps)
@@ -592,18 +660,6 @@ class Tasks:
 
         return task
 
-    def gldas(self):
-
-        deps = []
-        dep_dict = {'type': 'task', 'name': f'{self.cdump}sfcanl'}
-        deps.append(rocoto.add_dependency(dep_dict))
-        dependencies = rocoto.create_dependency(dep_condition='and', dep=deps)
-
-        resources = self.get_resource('gldas')
-        task = create_wf_task('gldas', resources, cdump=self.cdump, envar=self.envars, dependency=dependencies)
-
-        return task
-
     def fcst(self):
 
         fcst_map = {'forecast-only': self._fcst_forecast_only,
@@ -621,27 +677,8 @@ class Tasks:
     def _fcst_forecast_only(self):
         dependencies = []
 
-        deps = []
-        if self.app_config.do_atm:
-            data = f'&ROTDIR;/{self.cdump}.@Y@m@d/@H/atmos/INPUT/sfc_data.tile6.nc'
-            dep_dict = {'type': 'data', 'data': data}
-            deps.append(rocoto.add_dependency(dep_dict))
-            data = f'&ROTDIR;/{self.cdump}.@Y@m@d/@H/atmos/RESTART/@Y@m@d.@H0000.sfcanl_data.tile6.nc'
-            dep_dict = {'type': 'data', 'data': data}
-            deps.append(rocoto.add_dependency(dep_dict))
-            dependencies.append(rocoto.create_dependency(dep_condition='or', dep=deps))
-
-        else:  # data-atmosphere
-            data = f'&ICSDIR;/@Y@m@d@H/datm/gefs.@Y@m.nc'  # GEFS forcing
-            dep_dict = {'type': 'data', 'data': data}
-            deps.append(rocoto.add_dependency(dep_dict))
-            data = '&ICSDIR;/@Y@m@d@H/ocn/MOM.res.nc'  # TODO - replace with actual ocean IC
-            dep_dict = {'type': 'data', 'data': data}
-            deps.append(rocoto.add_dependency(dep_dict))
-            data = '&ICSDIR;/@Y@m@d@H/ice/cice5_model.res.nc'  # TODO - replace with actual ice IC
-            dep_dict = {'type': 'data', 'data': data}
-            deps.append(rocoto.add_dependency(dep_dict))
-            dependencies.append(rocoto.create_dependency(dep_condition='and', dep=deps))
+        dep_dict = {'type': 'task', 'name': f'{self.cdump}coupled_ic'}
+        dependencies.append(rocoto.add_dependency(dep_dict))
 
         if self.app_config.do_wave and self.cdump in self.app_config.wave_cdumps:
             wave_job = 'waveprep' if self.app_config.model_app in ['ATMW'] else 'waveinit'
@@ -680,16 +717,16 @@ class Tasks:
             dep_dict = {'type': 'task', 'name': f'{self.cdump}ocnanalpost'}
             dependencies.append(rocoto.add_dependency(dep_dict))
 
-        if self.app_config.do_gldas and self.cdump in ['gdas']:
-            dep_dict = {'type': 'task', 'name': f'{self.cdump}gldas'}
-            dependencies.append(rocoto.add_dependency(dep_dict))
-
         if self.app_config.do_wave and self.cdump in self.app_config.wave_cdumps:
             dep_dict = {'type': 'task', 'name': f'{self.cdump}waveprep'}
             dependencies.append(rocoto.add_dependency(dep_dict))
 
         if self.app_config.do_aero:
             dep_dict = {'type': 'task', 'name': f'{self.cdump}aeroanlfinal'}
+            dependencies.append(rocoto.add_dependency(dep_dict))
+
+        if self.app_config.do_jedilandda:
+            dep_dict = {'type': 'task', 'name': f'{self.cdump}landanlfinal'}
             dependencies.append(rocoto.add_dependency(dep_dict))
 
         dependencies = rocoto.create_dependency(dep_condition='and', dep=dependencies)
@@ -760,7 +797,8 @@ class Tasks:
             return grp, dep, lst
 
         deps = []
-        data = f'&ROTDIR;/{self.cdump}.@Y@m@d/@H/atmos/{self.cdump}.t@Hz.log#dep#.txt'
+        atm_hist_path = self._template_to_rocoto_cycstring(self._base["COM_ATMOS_HISTORY_TMPL"])
+        data = f'{atm_hist_path}/{self.cdump}.t@Hz.atm.log#dep#.txt'
         dep_dict = {'type': 'data', 'data': data}
         deps.append(rocoto.add_dependency(dep_dict))
         dep_dict = {'type': 'task', 'name': f'{self.cdump}fcst'}
@@ -789,7 +827,8 @@ class Tasks:
     def wavepostsbs(self):
         deps = []
         for wave_grid in self._configs['wavepostsbs']['waveGRD'].split():
-            data = f'&ROTDIR;/{self.cdump}.@Y@m@d/@H/wave/rundata/{self.cdump}wave.out_grd.{wave_grid}.@Y@m@d.@H0000'
+            wave_hist_path = self._template_to_rocoto_cycstring(self._base["COM_WAVE_HISTORY_TMPL"])
+            data = f'{wave_hist_path}/{self.cdump}wave.out_grd.{wave_grid}.@Y@m@d.@H0000'
             dep_dict = {'type': 'data', 'data': data}
             deps.append(rocoto.add_dependency(dep_dict))
         dependencies = rocoto.create_dependency(dep_condition='and', dep=deps)
@@ -812,7 +851,8 @@ class Tasks:
 
     def wavepostbndpntbll(self):
         deps = []
-        data = f'&ROTDIR;/{self.cdump}.@Y@m@d/@H/atmos/{self.cdump}.t@Hz.logf180.txt'
+        wave_hist_path = self._template_to_rocoto_cycstring(self._base["COM_WAVE_HISTORY_TMPL"])
+        data = f'{wave_hist_path}/{self.cdump}.t@Hz.atm.logf180.txt'
         dep_dict = {'type': 'data', 'data': data}
         deps.append(rocoto.add_dependency(dep_dict))
         dependencies = rocoto.create_dependency(dep=deps)
@@ -889,10 +929,12 @@ class Tasks:
         if task_name not in ['wafs', 'wafsgcip', 'wafsgrib2', 'wafsgrib20p25']:
             raise KeyError(f'Invalid WAFS task: {task_name}')
 
+        wafs_path = self._template_to_rocoto_cycstring(self._base["COM_ATMOS_WAFS_TMPL"])
+
         deps = []
         fhrlst = [6] + [*range(12, 36 + 3, 3)]
         for fhr in fhrlst:
-            data = f'&ROTDIR;/{self.cdump}.@Y@m@d/@H/atmos/{self.cdump}.t@Hz.wafs.grb2if{fhr:03d}'
+            data = f'{wafs_path}/{self.cdump}.t@Hz.wafs.grb2if{fhr:03d}'
             dep_dict = {'type': 'data', 'data': data}
             deps.append(rocoto.add_dependency(dep_dict))
         dependencies = rocoto.create_dependency(dep_condition='and', dep=deps)
@@ -1119,7 +1161,7 @@ class Tasks:
         eomgenvars = self.envars.copy()
         eomgenvars.append(rocoto.create_envar(name='ENSGRP', value='#grp#'))
 
-        groups = self._get_hybgroups(self._base['NMEM_ENKF'], self._configs['eobs']['NMEM_EOMGGRP'])
+        groups = self._get_hybgroups(self._base['NMEM_ENS'], self._configs['eobs']['NMEM_EOMGGRP'])
 
         resources = self.get_resource('eomg')
         task = create_wf_task('eomg', resources, cdump=self.cdump, envar=eomgenvars, dependency=dependencies,
@@ -1277,10 +1319,10 @@ class Tasks:
         efcsenvars = self.envars.copy()
         efcsenvars.append(rocoto.create_envar(name='ENSGRP', value='#grp#'))
 
-        groups = self._get_hybgroups(self._base['NMEM_ENKF'], self._configs['efcs']['NMEM_EFCSGRP'])
+        groups = self._get_hybgroups(self._base['NMEM_ENS'], self._configs['efcs']['NMEM_EFCSGRP'])
 
         if self.cdump == "enkfgfs":
-            groups = self._get_hybgroups(self._base['NMEM_EFCS'], self._configs['efcs']['NMEM_EFCSGRP_GFS'])
+            groups = self._get_hybgroups(self._base['NMEM_ENS_GFS'], self._configs['efcs']['NMEM_EFCSGRP_GFS'])
         cycledef = 'gdas_half,gdas' if self.cdump in ['enkfgdas'] else self.cdump.replace('enkf', '')
         resources = self.get_resource('efcs')
         task = create_wf_task('efcs', resources, cdump=self.cdump, envar=efcsenvars, dependency=dependencies,
@@ -1364,7 +1406,7 @@ class Tasks:
         earcenvars = self.envars.copy()
         earcenvars.append(rocoto.create_envar(name='ENSGRP', value='#grp#'))
 
-        groups = self._get_hybgroups(self._base['NMEM_ENKF'], self._configs['earc']['NMEM_EARCGRP'], start_index=0)
+        groups = self._get_hybgroups(self._base['NMEM_ENS'], self._configs['earc']['NMEM_EARCGRP'], start_index=0)
 
         cycledef = 'gdas_half,gdas' if self.cdump in ['enkfgdas'] else self.cdump.replace('enkf', '')
 
