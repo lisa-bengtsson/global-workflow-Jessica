@@ -851,6 +851,10 @@ MOM6_postdet() {
         $NLN ${COM_OCEAN_HISTORY}/${dest_file} ${DATA}/${source_file}
       fi
 
+      source_file="wavocn_${YYYY_MID}_${MM_MID}_${DD_MID}_${HH_MID}.nc"
+      dest_file=${source_file}
+      ${NLN} ${COM_OCEAN_HISTORY}/${dest_file} ${DATA}/${source_file}
+
       last_fhr=$fhr
     done
 

@@ -12,7 +12,7 @@ if [[ "${machine}" == "WCOSS2" ]]; then
 elif [[ "${machine}" == "HERA" ]]; then
   export BASE_CPLIC="/scratch1/NCEPDEV/climate/role.ufscpara/IC"
 elif [[ "${machine}" == "ORION" ]]; then
-  export BASE_CPLIC="/work/noaa/global/glopara/data/ICSDIR/prototype_ICs"
+  export BASE_CPLIC="/work2/noaa/marine/jmeixner/Lapenta2023/IC"
 elif [[ "${machine}" == "S4" ]]; then
   export BASE_CPLIC="/data/prod/glopara/coupled_ICs"
 elif [[ "${machine}" == "JET" ]]; then
