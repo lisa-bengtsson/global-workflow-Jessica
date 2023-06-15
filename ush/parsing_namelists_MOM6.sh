@@ -4,11 +4,11 @@ MOM6_namelists(){
 
 # MOM6 namelists generation
 
-if [[ "${cplwav}" == ".true." ]] ; then
-  local MOM6_USE_WAVES='True'
-else
+#if [[ "${cplwav}" == ".true." ]] ; then
+#  local MOM6_USE_WAVES='True'
+#else
   local MOM6_USE_WAVES='False'
-fi
+#fi
 
 cat >> input.nml <<EOF
 

@@ -222,7 +222,7 @@ case "${APP}" in
     if [[ "${APP}" =~ ^S2SW ]]; then
         export DO_WAVE="YES"
         export WAVE_CDUMP="both"
-        export cplwav2atm=".true."
+        #export cplwav2atm=".true."
         export confignamevarfornems="${confignamevarfornems}_outerwave"
     fi
 

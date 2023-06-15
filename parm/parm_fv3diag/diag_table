@@ -82,7 +82,7 @@
  "ocean_model", "geolat",             "geolat",             "wavocn%4yr%2mo%2dy%2hr","all", .false., "none", 2
  "ocean_model", "MSTAR",              "MSTAR",              "wavocn%4yr%2mo%2dy%2hr","all", .true.,  "none", 2
  "ocean_model", "LA",                 "LA",                 "wavocn%4yr%2mo%2dy%2hr","all", .true.,  "none", 2
- "ocean_model", "LA_MOD",             "LA_MOD",             "wavocn%4yr%2mo%2dy%2hr","all", .true.,  "none", 2
+# "ocean_model", "LA_MOD",             "LA_MOD",             "wavocn%4yr%2mo%2dy%2hr","all", .true.,  "none", 2
  "ocean_model", "MSTAR_LT",           "MSTAR_LT",           "wavocn%4yr%2mo%2dy%2hr","all", .true.,  "none", 2
  "ocean_model", "ePBL_h_ML",          "ePBL",               "wavocn%4yr%2mo%2dy%2hr","all", .true.,  "none", 2
  "ocean_model", "ustar",              "ustar",              "wavocn%4yr%2mo%2dy%2hr","all", .true.,  "none", 2
