@@ -103,8 +103,7 @@ for dir in aer \
             reg2grb2 \
             sfc_climo \
             ugwd \
-            verif \
-            wave
+            verif 
             do
     if [[ -d "${dir}" ]]; then
       [[ "${RUN_ENVIR}" == "nco" ]] && chmod -R 755 "${dir}"
@@ -114,6 +113,7 @@ for dir in aer \
     ${LINK} "${FIX_DIR}/${dir}/${!fix_ver}" "${dir}"
 done
 
+${LINK} /work2/noaa/marine/jmeixner/Lapenta2023/experiments/betamax01/wavefixbetamax01 wave
 
 if [[ -d "${script_dir}/ufs_utils.fd" ]]; then
   cd "${script_dir}/ufs_utils.fd/fix" || exit 1
