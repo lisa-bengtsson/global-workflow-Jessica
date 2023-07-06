@@ -5,7 +5,7 @@ To clone:
 ```
 git clone https://github.com/jessicameixner-noaa/global-workflow
 cd global-workflow
-git checkout Lapenta/fld0
+git checkout Lapenta/fld1
 ```
 
 Then start following the instructions for build and run from step 3 where you load modules
