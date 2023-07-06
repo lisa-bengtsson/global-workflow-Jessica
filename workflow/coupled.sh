@@ -6,7 +6,7 @@ IDATE=2020021300
 #IDATE=2020091300
 
 #Things that do not necessarily need to change: 
-PSLOT=contorl${IDATE}
+PSLOT=fld0${IDATE}
 COMROT=$BASEDIR/$PSLOT/COMROOT
 EXPDIR=$BASEDIR/$PSLOT/EXPDIR
 
