@@ -365,7 +365,7 @@ if [[ "${skip_ww3}" == "false" ]]; then
       nthreads_ww3=1
       ;;
     "mx025")
-      ntasks_ww3=80
+      ntasks_ww3=300
       ;;
     *)
       echo "FATAL ERROR: Unsupported WW3 resolution = ${ww3_res}, ABORT!"

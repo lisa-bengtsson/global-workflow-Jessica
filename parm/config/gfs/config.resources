@@ -595,7 +595,7 @@ elif [[ "${step}" = "fcst" || "${step}" = "efcs" ]]; then
         ;;
       "C384" | "C768" | "C1152")
         declare -x "wtime_${step}"="01:00:00"
-        declare -x "wtime_${step}_gfs"="06:00:00"
+        declare -x "wtime_${step}_gfs"="08:00:00"
         ;;
       *)
         echo "FATAL ERROR: Resolution ${CASE} not supported in ${step}"
