@@ -361,6 +361,7 @@ elif [[ "${step}" = "ocnanalrun" ]]; then
    case ${CASE} in
       C384)
         npes=480
+        export memory_ocnanalchkpt="2.8TB"
         ;;
       C48)
         npes=16
@@ -370,7 +371,7 @@ elif [[ "${step}" = "ocnanalrun" ]]; then
           exit 1
     esac
 
-    export wtime_ocnanalrun="00:30:00"
+    export wtime_ocnanalrun="00:15:00"
     export npe_ocnanalrun=${npes}
     export nth_ocnanalrun=1
     export is_exclusive=True
@@ -602,6 +603,10 @@ elif [[ "${step}" = "fcst" || "${step}" = "efcs" ]]; then
       "C48" | "C96" | "C192")
         declare -x "wtime_${step}"="00:30:00"
         declare -x "wtime_${step}_gfs"="03:00:00"
+        ;;
+      "C384")
+        declare -x "wtime_${step}"="00:15:00"
+        declare -x "wtime_${step}_gfs"="00:45:00"
         ;;
       "C384" | "C768" | "C1152")
         declare -x "wtime_${step}"="01:00:00"

@@ -338,7 +338,7 @@ elif [[ "${step}" = "ocnanalbmat" ]]; then
    npes=16
    case ${CASE} in
       C384)
-        npes=480
+        npes=720
         ;;
       C48)
         npes=16
@@ -359,7 +359,7 @@ elif [[ "${step}" = "ocnanalrun" ]]; then
    npes=16
    case ${CASE} in
       C384)
-        npes=480
+        npes=720
         ;;
       C48)
         npes=16
