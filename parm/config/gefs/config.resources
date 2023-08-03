@@ -360,9 +360,11 @@ elif [[ "${step}" = "ocnanalrun" ]]; then
    case ${CASE} in
       C384)
         npes=720
+        nnodes=30
         ;;
       C48)
         npes=16
+        nnodes=1
         ;;
       *)
           echo "FATAL: Resolution not supported'"
@@ -373,8 +375,7 @@ elif [[ "${step}" = "ocnanalrun" ]]; then
     export npe_ocnanalrun=${npes}
     export nth_ocnanalrun=1
     export is_exclusive=True
-    npe_node_ocnanalrun=$(echo "${npe_node_max} / ${nth_ocnanalrun}" | bc)
-    export npe_node_ocnanalrun
+    export npe_node_ocnanalrun=${nnodes}
 
 elif [[ "${step}" = "ocnanalchkpt" ]]; then
 

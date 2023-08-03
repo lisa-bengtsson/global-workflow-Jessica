@@ -7,6 +7,8 @@
 # ./link_workflow.sh emc [hera][jet][orion]
 
 # Hera
+module use ./global-workflow/sorc/gdas.cd/modulefiles
+module load GDAS/hera
 module use -a /contrib/anaconda/modulefiles
 module load anaconda/anaconda3-5.3.1
 module load rocoto/1.3.3
@@ -20,7 +22,7 @@ CONFIGDIR=$GWDIR/parm/config/gfs
 BASEDIR=$PWD # were we run/dump stuff
 
 # Experiment setup. 
-PSLOT=tsuv_iau #golden-c384 #iceinit_c384
+PSLOT=cp0_500 #golden-c384 #iceinit_c384
 RES=48 #48 #384
 case $RES in
   "384")
