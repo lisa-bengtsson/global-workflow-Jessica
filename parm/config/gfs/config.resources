@@ -471,6 +471,7 @@ elif [[ ${step} = "analcalc" ]]; then
     npe_node_analcalc=$(echo "${npe_node_max} / ${nth_analcalc}" | bc)
     export npe_node_analcalc
     export is_exclusive=True
+    export memory_analcalc="96GB"
 
 elif [[ ${step} = "analdiag" ]]; then
 
