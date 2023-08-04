@@ -361,10 +361,12 @@ elif [[ "${step}" = "ocnanalrun" ]]; then
       C384)
         npes=720
         nnodes=30
+	     export memory_ocnanalrun="128GB"
         ;;
       C48)
         npes=16
         nnodes=1
+        export memory_ocnanalrun="32GB"
         ;;
       *)
           echo "FATAL: Resolution not supported'"
