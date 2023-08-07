@@ -9,9 +9,6 @@
 # Hera
 module use ./global-workflow/sorc/gdas.cd/modulefiles
 module load GDAS/hera
-module use -a /contrib/anaconda/modulefiles
-module load anaconda/anaconda3-5.3.1
-module load rocoto/1.3.3
 
 # Don't do this if you have other things running!
 pkill -u ${USER} rocoto
@@ -22,8 +19,8 @@ CONFIGDIR=$GWDIR/parm/config/gfs
 BASEDIR=$PWD # were we run/dump stuff
 
 # Experiment setup. 
-PSLOT=cp0 #golden-c384 #iceinit_c384
-RES=384 #48 #384
+PSLOT=cp0_500 #golden-c384 #iceinit_c384
+RES=48 #48 #384
 case $RES in
   "384")
 	echo "Golden period with AC384-O025"
@@ -117,6 +114,11 @@ $GWDIR/workflow/setup_expt.py gfs cycled --app $APP \
 
 echo "generate xml stuff"
 $GWDIR/workflow/setup_xml.py $EXPDIR/$PSLOT
+
+
+module use -a /contrib/anaconda/modulefiles
+module load anaconda/anaconda3-5.3.1
+module load rocoto/1.3.3
 
 # run experiments
 cd ${BASEDIR}/${PSLOT}/EXPDIR/${PSLOT}
