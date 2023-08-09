@@ -338,7 +338,7 @@ elif [[ "${step}" = "ocnanalbmat" ]]; then
    npes=16
    case ${CASE} in
       C384)
-        npes=720
+        npes=480
         ;;
       C48)
         npes=16
@@ -359,14 +359,14 @@ elif [[ "${step}" = "ocnanalrun" ]]; then
    npes=16
    case ${CASE} in
       C384)
-        npes=720
+        npes=480
         nnodes=30
-	     export memory_ocnanalrun="128GB"
+	memory_ocnanalrun="128GB"
         ;;
       C48)
         npes=16
         nnodes=1
-        export memory_ocnanalrun="32GB"
+        memory_ocnanalrun="32GB"
         ;;
       *)
           echo "FATAL: Resolution not supported'"
@@ -378,6 +378,7 @@ elif [[ "${step}" = "ocnanalrun" ]]; then
     export nth_ocnanalrun=1
     export is_exclusive=True
     export npe_node_ocnanalrun=${nnodes}
+    export memory_ocnanalrun
 
 elif [[ "${step}" = "ocnanalchkpt" ]]; then
 
