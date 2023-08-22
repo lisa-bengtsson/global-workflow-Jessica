@@ -19,7 +19,7 @@ CONFIGDIR=$GWDIR/parm/config/gfs
 BASEDIR=$PWD # were we run/dump stuff
 
 # Experiment setup. 
-PSLOT=cp0.b #golden-c384 #iceinit_c384
+PSLOT=cp0.c #golden-c384 #iceinit_c384
 RES=384 #384 #48 #384
 case $RES in
   "384")
@@ -60,6 +60,7 @@ rm -f ${obs_list_yaml}
 
 obs_list=(adt_j3_egm2008 adt_3a_egm2008 adt_3b_egm2008 adt_c2_egm2008 adt_sa_egm2008 \
           sst_viirs_npp_l3u_so025 sst_viirs_npp_l3u_so025 sst_metopa_l3u_so025 sst_metopb_l3u_so025 sst_metopc_l3u_so025 \
+          sst_drifter \
           icec_ssmis_f17_north icec_ssmis_f17_south icec_ssmis_f18_north icec_ssmis_f18_south)
 
 touch obs_list.yaml
@@ -79,7 +80,7 @@ fi
 echo "ocnanal:" > ocnanal.yaml
 echo "  SOCA_INPUT_FIX_DIR: ${SOCA_INPUT_FIX_DIR}" >> ocnanal.yaml
 echo "  CASE_ANL: 'C24'" >> ocnanal.yaml
-echo "  COMIN_OBS: '/scratch2/NCEPDEV/ocean/Guillaume.Vernieres/runs/r2d2-v2-v3'" >> ocnanal.yaml
+echo "  COMIN_OBS: '/scratch2/NCEPDEV/marineda/r2d2-v2-v3'" >> ocnanal.yaml
 echo "  SOCA_OBS_LIST: ${obs_list_yaml}" >> ocnanal.yaml
 echo "  SOCA_NINNER: 100" >> ocnanal.yaml
 echo "  R2D2_OBS_SRC: 'gdas_marine'" >> ocnanal.yaml
