@@ -52,6 +52,7 @@ common_predet(){
   CDUMP=${CDUMP:-gdas}
   CASE=${CASE:-C768}
   CDATE=${CDATE:-2017032500}
+  ENSMEM=${ENSMEM:-000}
 
   FCSTEXECDIR=${FCSTEXECDIR:-${HOMEgfs}/exec}
   FCSTEXEC=${FCSTEXEC:-ufs_model.x}
@@ -60,7 +61,6 @@ common_predet(){
   FIX_DIR=${FIX_DIR:-${HOMEgfs}/fix}
 
   # Model specific stuff
-  PARM_FV3DIAG=${PARM_FV3DIAG:-${HOMEgfs}/parm/parm_fv3diag}
   PARM_POST=${PARM_POST:-${HOMEgfs}/parm/post}
 
   # Define significant cycles

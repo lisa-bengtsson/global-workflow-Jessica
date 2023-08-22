@@ -131,6 +131,10 @@ fi
 #---------------------------------------
 #--add files from external repositories
 #---------------------------------------
+#--copy/link NoahMp table form ccpp-physics repository
+cd "${HOMEgfs}/parm/ufs" || exit 1
+${LINK_OR_COPY} "${HOMEgfs}/sorc/ufs_model.fd/FV3/ccpp/physics/physics/noahmptable.tbl" .
+
 cd "${HOMEgfs}/parm/post" || exit 1
 for file in postxconfig-NT-GEFS-ANL.txt postxconfig-NT-GEFS-F00.txt postxconfig-NT-GEFS.txt postxconfig-NT-GFS-ANL.txt \
     postxconfig-NT-GFS-F00-TWO.txt postxconfig-NT-GFS-F00.txt postxconfig-NT-GFS-FLUX-F00.txt postxconfig-NT-GFS-FLUX.txt \
@@ -183,7 +187,7 @@ if [[ -d "${HOMEgfs}/sorc/gdas.cd" ]]; then
   cd "${HOMEgfs}/fix" || exit 1
   [[ ! -d gdas ]] && mkdir -p gdas
   cd gdas || exit 1
-  for gdas_sub in crtm fv3jedi gsibec; do
+  for gdas_sub in fv3jedi gsibec; do
     if [[ -d "${gdas_sub}" ]]; then
        rm -rf "${gdas_sub}"
     fi
@@ -308,6 +312,7 @@ if [[ -d "${HOMEgfs}/sorc/gdas.cd" ]]; then
                        "soca_setcorscales.x" \
                        "soca_gridgen.x" \
                        "soca_var.x" \
+                       "bufr2ioda.x" \
                        "calcfIMS.exe" \
                        "apply_incr.exe" )
   for gdasexe in "${JEDI_EXE[@]}"; do

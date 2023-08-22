@@ -112,16 +112,17 @@ for imem in $(seq "${ENSBEG}" "${ENSEND}"); do
 
    cd "${DATATOP}"
 
-   cmem=$(printf %03i "${imem}")
-   memchar="mem${cmem}"
+   ENSMEM=$(printf %03i "${imem}")
+   export ENSMEM
+   memchar="mem${ENSMEM}"
 
-   echo "Processing MEMBER: ${cmem}"
+   echo "Processing MEMBER: ${ENSMEM}"
 
    ra=0
 
    skip_mem="NO"
    if [[ -f ${EFCSGRP}.fail ]]; then
-      memstat=$(grep "MEMBER ${cmem}" "${EFCSGRP}.fail" | grep -c "PASS")
+      memstat=$(grep "MEMBER ${ENSMEM}" "${EFCSGRP}.fail" | grep -c "PASS")
       [[ ${memstat} -eq 1 ]] && skip_mem="YES"
    fi
 
@@ -130,22 +131,22 @@ for imem in $(seq "${ENSBEG}" "${ENSEND}"); do
    MEMDIR="${memchar}" YMD=${PDY} HH=${cyc} generate_com -x COM_ATMOS_RESTART COM_ATMOS_INPUT COM_ATMOS_ANALYSIS \
      COM_ATMOS_HISTORY COM_ATMOS_MASTER
 
-   RUN=${rCDUMP} MEMDIR="${memchar}" YMD="${gPDY}" HH="${gcyc}" generate_com -x COM_ATMOS_RESTART_PREV:COM_ATMOS_RESTART_TMPL
+   MEMDIR="${memchar}" YMD="${gPDY}" HH="${gcyc}" generate_com -x COM_ATMOS_RESTART_PREV:COM_ATMOS_RESTART_TMPL
 
    if [[ ${DO_WAVE} == "YES" ]]; then
      MEMDIR="${memchar}" YMD=${PDY} HH=${cyc} generate_com -x COM_WAVE_RESTART COM_WAVE_PREP COM_WAVE_HISTORY
-     RUN=${rCDUMP} MEMDIR="${memchar}" YMD="${gPDY}" HH="${gcyc}" generate_com -x COM_WAVE_RESTART_PREV:COM_WAVE_RESTART_TMPL
+     MEMDIR="${memchar}" YMD="${gPDY}" HH="${gcyc}" generate_com -x COM_WAVE_RESTART_PREV:COM_WAVE_RESTART_TMPL
    fi
 
    if [[ ${DO_OCN} == "YES" ]]; then
      MEMDIR="${memchar}" YMD=${PDY} HH=${cyc} generate_com -x COM_MED_RESTART COM_OCEAN_RESTART \
        COM_OCEAN_INPUT COM_OCEAN_HISTORY COM_OCEAN_ANALYSIS
-     RUN=${rCDUMP} MEMDIR="${memchar}" YMD="${gPDY}" HH="${gcyc}" generate_com -x COM_OCEAN_RESTART_PREV:COM_OCEAN_RESTART_TMPL
+     MEMDIR="${memchar}" YMD="${gPDY}" HH="${gcyc}" generate_com -x COM_OCEAN_RESTART_PREV:COM_OCEAN_RESTART_TMPL
    fi
 
    if [[ ${DO_ICE} == "YES" ]]; then
      MEMDIR="${memchar}" YMD=${PDY} HH=${cyc} generate_com -x COM_ICE_HISTORY COM_ICE_INPUT COM_ICE_RESTART
-     RUN=${rCDUMP} MEMDIR="${memchar}" YMD="${gPDY}" HH="${gcyc}" generate_com -x COM_ICE_RESTART_PREV:COM_ICE_RESTART_TMPL
+     MEMDIR="${memchar}" YMD="${gPDY}" HH="${gcyc}" generate_com -x COM_ICE_RESTART_PREV:COM_ICE_RESTART_TMPL
    fi
 
    if [[ ${DO_AERO} == "YES" ]]; then
@@ -166,7 +167,7 @@ for imem in $(seq "${ENSBEG}" "${ENSEND}"); do
 
       # Notify a member forecast failed and abort
       if [[ ${ra} -ne 0 ]]; then
-         err_exit "FATAL ERROR:  forecast of member ${cmem} FAILED.  Aborting job"
+         err_exit "FATAL ERROR:  forecast of member ${ENSMEM} FAILED.  Aborting job"
       fi
 
       rc=$((rc+ra))
@@ -192,9 +193,9 @@ for imem in $(seq "${ENSBEG}" "${ENSEND}"); do
    [[ -f log ]] && rm log
    [[ -f log_new ]] && rm log_new
    if [[ ${ra} -ne 0 ]]; then
-      echo "MEMBER ${cmem} : FAIL" > log
+      echo "MEMBER ${ENSMEM} : FAIL" > log
    else
-      echo "MEMBER ${cmem} : PASS" > log
+      echo "MEMBER ${ENSMEM} : PASS" > log
    fi
    if [[ -s log_old ]] ; then
        cat log_old log > log_new

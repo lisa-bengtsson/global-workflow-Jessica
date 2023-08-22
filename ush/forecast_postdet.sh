@@ -140,7 +140,7 @@ EOF
   fi
 
   OROFIX=${OROFIX:-"${FIX_DIR}/orog/${CASE}.mx${OCNRES}_frac"}
-  FIX_SFC=${FIX_SFC:-"${OROFIX}/fix_sfc"}
+  FIX_SFC=${FIX_SFC:-"${OROFIX}/sfc"}
   for n in $(seq 1 "${ntiles}"); do
     ${NLN} "${OROFIX}/oro_${CASE}.mx${OCNRES}.tile${n}.nc" "${DATA}/INPUT/oro_data.tile${n}.nc"
     ${NLN} "${OROFIX}/${CASE}_grid.tile${n}.nc"     "${DATA}/INPUT/${CASE}_grid.tile${n}.nc"
@@ -189,6 +189,15 @@ EOF
     iopt_stc=${iopt_stc:-"1"}
     IALB=${IALB:-1}
     IEMS=${IEMS:-1}
+  fi
+
+  # NoahMP table
+  local noahmptablefile="${HOMEgfs}/parm/ufs/noahmptable.tbl"
+  if [[ ! -f ${noahmptablefile} ]]; then
+    echo "FATAL ERROR: missing noahmp table file ${noahmptablefile}"
+    exit 1
+  else
+    ${NLN} "${noahmptablefile}" "${DATA}/noahmptable.tbl"
   fi
 
   # Files for GWD
@@ -294,17 +303,18 @@ EOF
   FNSNOC=${FNSNOC:-"${FIX_DIR}/am/global_snoclim.1.875.grb"}
   FNZORC=${FNZORC:-"igbp"}
   FNAISC=${FNAISC:-"${FIX_DIR}/am/IMS-NIC.blended.ice.monthly.clim.grb"}
-  FNALBC2=${FNALBC2:-"${FIX_SFC}/${CASE}.facsf.tileX.nc"}
-  FNTG3C=${FNTG3C:-"${FIX_SFC}/${CASE}.substrate_temperature.tileX.nc"}
-  FNVEGC=${FNVEGC:-"${FIX_SFC}/${CASE}.vegetation_greenness.tileX.nc"}
+  FNALBC2=${FNALBC2:-"${FIX_SFC}/${CASE}.mx${OCNRES}.facsf.tileX.nc"}
+  FNTG3C=${FNTG3C:-"${FIX_SFC}/${CASE}.mx${OCNRES}.substrate_temperature.tileX.nc"}
+  FNVEGC=${FNVEGC:-"${FIX_SFC}/${CASE}.mx${OCNRES}.vegetation_greenness.tileX.nc"}
   FNMSKH=${FNMSKH:-"${FIX_DIR}/am/global_slmask.t1534.3072.1536.grb"}
-  FNVMNC=${FNVMNC:-"${FIX_SFC}/${CASE}.vegetation_greenness.tileX.nc"}
-  FNVMXC=${FNVMXC:-"${FIX_SFC}/${CASE}.vegetation_greenness.tileX.nc"}
-  FNSLPC=${FNSLPC:-"${FIX_SFC}/${CASE}.slope_type.tileX.nc"}
-  FNALBC=${FNALBC:-"${FIX_SFC}/${CASE}.snowfree_albedo.tileX.nc"}
-  FNVETC=${FNVETC:-"${FIX_SFC}/${CASE}.vegetation_type.tileX.nc"}
-  FNSOTC=${FNSOTC:-"${FIX_SFC}/${CASE}.soil_type.tileX.nc"}
-  FNABSC=${FNABSC:-"${FIX_SFC}/${CASE}.maximum_snow_albedo.tileX.nc"}
+  FNVMNC=${FNVMNC:-"${FIX_SFC}/${CASE}.mx${OCNRES}.vegetation_greenness.tileX.nc"}
+  FNVMXC=${FNVMXC:-"${FIX_SFC}/${CASE}.mx${OCNRES}.vegetation_greenness.tileX.nc"}
+  FNSLPC=${FNSLPC:-"${FIX_SFC}/${CASE}.mx${OCNRES}.slope_type.tileX.nc"}
+  FNALBC=${FNALBC:-"${FIX_SFC}/${CASE}.mx${OCNRES}.snowfree_albedo.tileX.nc"}
+  FNVETC=${FNVETC:-"${FIX_SFC}/${CASE}.mx${OCNRES}.vegetation_type.tileX.nc"}
+  FNSOTC=${FNSOTC:-"${FIX_SFC}/${CASE}.mx${OCNRES}.soil_type.tileX.nc"}
+  FNSOCC=${FNSOCC:-"${FIX_SFC}/${CASE}.mx${OCNRES}.soil_color.tileX.nc"}
+  FNABSC=${FNABSC:-"${FIX_SFC}/${CASE}.mx${OCNRES}.maximum_snow_albedo.tileX.nc"}
   FNSMCC=${FNSMCC:-"${FIX_DIR}/am/global_soilmgldas.statsgo.t${JCAP}.${LONB}.${LATB}.grb"}
 
   # If the appropriate resolution fix file is not present, use the highest resolution available (T1534)
@@ -502,8 +512,8 @@ FV3_out() {
       done
       local idate=$(date -d "${idate:0:8} ${idate:8:2} + ${restart_interval} hours" +%Y%m%d%H)
     done
-  elif [[ ${RUN} =~ "gfs" ]]; then
-    # No need to copy FV3 restart files when RUN=gfs
+  else
+    # No need to copy FV3 restart files when RUN=gfs or gefs
     ${NCP} "${DATA}/input.nml" "${COM_ATMOS_HISTORY}/input.nml"
   fi
   echo "SUB ${FUNCNAME[0]}: Output data for FV3 copied"
@@ -736,11 +746,10 @@ MOM6_postdet() {
   [[ ! -d ${COM_OCEAN_HISTORY} ]] && mkdir -p "${COM_OCEAN_HISTORY}"
 
   # Link output files
-  if [[ "${RUN}" =~ "gfs" ]]; then
+  if [[ "${RUN}" =~ "gfs" || "${RUN}" =~ "gefs" ]]; then
     # Link output files for RUN = gfs
 
     # TODO: get requirements on what files need to be written out and what these dates here are and what they mean
-    export ENSMEM=${ENSMEM:-01}
 
     if [[ ! -d ${COM_OCEAN_HISTORY} ]]; then mkdir -p "${COM_OCEAN_HISTORY}"; fi
 
@@ -875,7 +884,7 @@ CICE_postdet() {
 
   if [[ "${RUN}" =~ "gdas" ]]; then
     cice_hist_avg=".false."   # DA needs instantaneous
-  elif [[ "${RUN}" =~ "gfs" ]]; then
+  else
     cice_hist_avg=".true."    # P8 wants averaged over histfreq_n
   fi
 
@@ -914,13 +923,11 @@ CICE_postdet() {
   if [[ ! -d "${COM_ICE_HISTORY}" ]]; then mkdir -p "${COM_ICE_HISTORY}"; fi
   mkdir -p "${COM_ICE_RESTART}"
 
-  if [[ "${RUN}" =~ "gfs" ]]; then
+  if [[ "${RUN}" =~ "gfs" || "${RUN}" =~ "gefs" ]]; then
     # Link output files for RUN = gfs
 
     # TODO: make these forecast output files consistent w/ GFS output
     # TODO: Work w/ NB to determine appropriate naming convention for these files
-
-    export ENSMEM=${ENSMEM:-01}
 
     # TODO: consult w/ NB on how to improve on this.  Gather requirements and more information on what these files are and how they are used to properly catalog them
     local vdate seconds vdatestr fhr last_fhr
