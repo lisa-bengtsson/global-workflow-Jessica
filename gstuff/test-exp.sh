@@ -19,8 +19,8 @@ CONFIGDIR=$GWDIR/parm/config/gfs
 BASEDIR=$PWD # were we run/dump stuff
 
 # Experiment setup. 
-PSLOT=cp0.c #golden-c384 #iceinit_c384
-RES=384 #384 #48 #384
+PSLOT=cp0_500 #golden-c384 #iceinit_c384
+RES=48 #384 #48 #384
 case $RES in
   "384")
 	echo "Golden period with AC384-O025"
