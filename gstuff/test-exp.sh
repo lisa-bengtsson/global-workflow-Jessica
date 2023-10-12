@@ -60,7 +60,6 @@ rm -f ${obs_list_yaml}
 
 obs_list=(adt_j3_egm2008 adt_3a_egm2008 adt_3b_egm2008 adt_c2_egm2008 adt_sa_egm2008 \
           sst_viirs_npp_l3u_so025 sst_viirs_npp_l3u_so025 sst_metopa_l3u_so025 sst_metopb_l3u_so025 sst_metopc_l3u_so025 \
-          sst_drifter \
           icec_ssmis_f17_north icec_ssmis_f17_south icec_ssmis_f18_north icec_ssmis_f18_south)
 
 touch obs_list.yaml
