@@ -286,7 +286,7 @@ export WRITE_DOPOST=".true." # WRITE_DOPOST=true, use inline POST
 export WRITE_NSFLIP=".true."
 
 # IAU related parameters
-export DOIAU="NO"        # Enable 4DIAU for control with 3 increments
+export DOIAU="YES"        # Enable 4DIAU for control with 3 increments
 export IAUFHRS="3,6,9"
 export IAU_FHROT=${IAUFHRS%%,*}
 export IAU_DELTHRS=6
