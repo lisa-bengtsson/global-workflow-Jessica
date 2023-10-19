@@ -25,9 +25,9 @@ case $RES in
   "384")
 	echo "Golden period with AC384-O025"
 	ORES=025
-	cyc=12
+	cyc=18
 	cdate=20210701
-	EDATE=2021071500
+	EDATE=2021070400
 	;;
   "48")
 	echo "Low-res test with AC48-O500"
